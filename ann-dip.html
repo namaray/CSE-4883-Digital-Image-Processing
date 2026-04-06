@@ -126,7 +126,69 @@
             border: 1px solid #ced4da;
             font-weight: bold;
         }
-    </style>
+
+
+    .math-container {
+        background: #fdfdfd;
+        border: 1px solid #e9ecef;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        overflow-x: auto;
+    }
+    .math-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin: 15px 0;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.1rem;
+        white-space: nowrap;
+    }
+    .matrix {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        padding: 5px 10px;
+        background-color: transparent;
+    }
+    /* Creates the left and right matrix brackets [ ] */
+    .matrix::before, .matrix::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 8px;
+        border: 2px solid var(--secondary-color);
+    }
+    .matrix::before { left: 0; border-right: none; }
+    .matrix::after { right: 0; border-left: none; }
+    
+    .matrix-row {
+        display: flex;
+        gap: 20px;
+        padding: 5px 0;
+        justify-content: center;
+    }
+    .matrix-cell {
+        min-width: 35px;
+        text-align: center;
+    }
+    .math-operator {
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+    }
+    .matrix-label {
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+</style>
 </head>
 <body>
 
@@ -228,74 +290,202 @@
             </table>
         </section>
 
+<!-- ADD THESE STYLES TO YOUR <style> TAG -->
+
+<!-- PASTE THIS SECTION IN YOUR HTML BODY -->
         <!-- Section: Mathematical Simulation (Forward Pass) -->
         <section class="content-box">
-            <h2>3.5 Mathematical Simulation of a Forward Pass</h2>
-            <p>Based on the architecture slides, here is a step-by-step matrix calculation showing how data moves through an ANN and how different activation functions alter the data at each layer.</p>
+            <h2>3.5 Mathematical Simulation of a Forward Pass (Step-by-Step)</h2>
+            <p>Based exactly on the architecture slides, here is how the matrices are multiplied and activated as data flows from left to right across the Neural Network.</p>
             
             <div class="exam-focus">
-                <h4>🧠 The Setup</h4>
-                <p>We have an ANN with 3 inputs, 2 hidden layers, and 1 output layer.</p>
+                <h4>🧠 The Setup & Initial Data</h4>
+                <p>We are simulating an ANN with <strong>3 inputs</strong>, <strong>2 hidden layers</strong>, and <strong>1 output layer</strong>.</p>
                 <ul>
-                    <li><strong>Inputs (I):</strong> <code>[0.1,  0.3,  0.5]</code></li>
-                    <li><strong>Expected Outputs (y):</strong> <code>[0.0,  1.0,  0.0]</code></li>
-                    <li><strong>Biases (b):</strong> Assumed to be <code>[1.0,  1.0,  1.0]</code> for each layer.</li>
-                    <li><em>Note: Weights (W) are randomly initialized to small numbers between 0 and 1.</em></li>
+                    <li><strong>Inputs [i1, i2, i3]:</strong> <code>[0.1, 0.3, 0.5]</code></li>
+                    <li><strong>Expected Actual Outputs [y1, y2, y3]:</strong> <code>[0.0, 1.0, 0.0]</code></li>
+                    <li><strong>Biases [b1, b2, b3]:</strong> <code>[1.0, 1.0, 1.0]</code> for all layers.</li>
+                    <li><strong>Weights:</strong> Randomly initialized small numbers between 0 and 1.</li>
                 </ul>
             </div>
 
+            <!-- LAYER 1 -->
             <h3>Step 1: Layer 1 Matrix Operation + ReLU Activation</h3>
-            <p>First, we calculate the dot product of Inputs and Weights, then add the bias.</p>
-            <div class="formula-box" style="font-size: 1rem; text-align: left; padding-left: 10%;">
-                [h1_in] = [Inputs] × [Weights_L1] + [Biases]<br><br>
-                [0.1, 0.3, 0.5] × W_ij + [1.0, 1.0, 1.0] = <strong>[1.2, 1.6, 1.5]</strong>
+            <p>We take the <code>1x3 Input Matrix</code>, multiply it by the <code>3x3 Weight Matrix (W_ij)</code>, and add the <code>1x3 Bias Matrix</code>.</p>
+            
+            <div class="math-container">
+                <div class="math-row">
+                    <div>
+                        <div class="matrix-label">Inputs</div>
+                        <div class="matrix">
+                            <div class="matrix-row">
+                                <div class="matrix-cell">0.1</div><div class="matrix-cell">0.3</div><div class="matrix-cell">0.5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="math-operator">×</div>
+                    <div>
+                        <div class="matrix-label">Weights (L1)</div>
+                        <div class="matrix">
+                            <div class="matrix-row"><div class="matrix-cell">0.2</div><div class="matrix-cell">0.4</div><div class="matrix-cell">0.5</div></div>
+                            <div class="matrix-row"><div class="matrix-cell">0.3</div><div class="matrix-cell">0.7</div><div class="matrix-cell">0.1</div></div>
+                            <div class="matrix-row"><div class="matrix-cell">0.2</div><div class="matrix-cell">0.6</div><div class="matrix-cell">0.9</div></div>
+                        </div>
+                    </div>
+                    <div class="math-operator">+</div>
+                    <div>
+                        <div class="matrix-label">Biases</div>
+                        <div class="matrix">
+                            <div class="matrix-row">
+                                <div class="matrix-cell">1.0</div><div class="matrix-cell">1.0</div><div class="matrix-cell">1.0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="math-operator">=</div>
+                    <div>
+                        <div class="matrix-label">[h1_in]</div>
+                        <div class="matrix">
+                            <div class="matrix-row" style="font-weight: bold; color: var(--primary-color);">
+                                <div class="matrix-cell">1.2</div><div class="matrix-cell">1.6</div><div class="matrix-cell">1.5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p>Next, we apply the <strong>ReLU Activation Function</strong>: <code>ReLU = max(0, x)</code></p>
+
+            <p><strong>Applying ReLU Activation:</strong> <code>ReLU = max(0, x)</code></p>
             <ul>
-                <li><code>max(0, 1.2) = 1.2</code></li>
-                <li><code>max(0, 1.6) = 1.6</code></li>
-                <li><code>max(0, 1.5) = 1.5</code></li>
+                <li>Node 1: <code>max(0, 1.2) = 1.2</code></li>
+                <li>Node 2: <code>max(0, 1.6) = 1.6</code></li>
+                <li>Node 3: <code>max(0, 1.5) = 1.5</code></li>
             </ul>
-            <p><strong>Layer 1 Output:</strong> <code>[1.2, 1.6, 1.5]</code></p>
+            <p><strong>Layer 1 Output [h1_out]:</strong> <code>[1.2, 1.6, 1.5]</code></p>
 
-            <h3>Step 2: Layer 2 Matrix Operation + Sigmoid Activation</h3>
-            <p>We take the output from Layer 1 and multiply it by the weights of Layer 2.</p>
-            <div class="formula-box" style="font-size: 1rem; text-align: left; padding-left: 10%;">
-                [h2_in] = [h1_out] × [Weights_L2] + [Biases]<br><br>
-                [1.2, 1.6, 1.5] × W_jk + [1.0, 1.0, 1.0] = <strong>[3.0, 3.0, 2.4]</strong>
+
+            <!-- LAYER 2 -->
+            <h3 style="margin-top: 40px;">Step 2: Layer 2 Matrix Operation + Sigmoid Activation</h3>
+            <p>The Output from Layer 1 now becomes the Input for Layer 2. We multiply it by Layer 2's weights (<code>W_jk</code>).</p>
+            
+            <div class="math-container">
+                <div class="math-row">
+                    <div>
+                        <div class="matrix-label">[h1_out]</div>
+                        <div class="matrix">
+                            <div class="matrix-row">
+                                <div class="matrix-cell">1.2</div><div class="matrix-cell">1.6</div><div class="matrix-cell">1.5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="math-operator">×</div>
+                    <div>
+                        <div class="matrix-label">Weights (L2)</div>
+                        <div class="matrix">
+                            <div class="matrix-row"><div class="matrix-cell">0.4</div><div class="matrix-cell">0.6</div><div class="matrix-cell">0.1</div></div>
+                            <div class="matrix-row"><div class="matrix-cell">0.2</div><div class="matrix-cell">0.7</div><div class="matrix-cell">0.3</div></div>
+                            <div class="matrix-row"><div class="matrix-cell">0.8</div><div class="matrix-cell">0.1</div><div class="matrix-cell">0.5</div></div>
+                        </div>
+                    </div>
+                    <div class="math-operator">+</div>
+                    <div>
+                        <div class="matrix-label">Biases</div>
+                        <div class="matrix">
+                            <div class="matrix-row">
+                                <div class="matrix-cell">1.0</div><div class="matrix-cell">1.0</div><div class="matrix-cell">1.0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="math-operator">=</div>
+                    <div>
+                        <div class="matrix-label">[h2_in]</div>
+                        <div class="matrix">
+                            <div class="matrix-row" style="font-weight: bold; color: var(--primary-color);">
+                                <div class="matrix-cell">3.0</div><div class="matrix-cell">3.0</div><div class="matrix-cell">2.4</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p>Next, we apply the <strong>Sigmoid Activation Function</strong>: <code>Sigmoid = 1 / (1 + e<sup>-x</sup>)</code></p>
+
+            <p><strong>Applying Sigmoid Activation:</strong> <code>Sigmoid = 1 / (1 + e<sup>-x</sup>)</code></p>
             <ul>
-                <li><code>1 / (1 + e<sup>-3.0</sup>) = 0.952</code></li>
-                <li><code>1 / (1 + e<sup>-3.0</sup>) = 0.952</code></li>
-                <li><code>1 / (1 + e<sup>-2.4</sup>) = 0.916</code></li>
+                <li>Node 1: <code>1 / (1 + e<sup>-3.0</sup>) = 0.952</code></li>
+                <li>Node 2: <code>1 / (1 + e<sup>-3.0</sup>) = 0.952</code></li>
+                <li>Node 3: <code>1 / (1 + e<sup>-2.4</sup>) = 0.916</code></li>
             </ul>
-            <p><strong>Layer 2 Output:</strong> <code>[0.952, 0.952, 0.916]</code></p>
+            <p><strong>Layer 2 Output [h2_out]:</strong> <code>[0.952, 0.952, 0.916]</code></p>
 
-            <h3>Step 3: Layer 3 Matrix Operation + Softmax Activation</h3>
-            <p>We take the output from Layer 2 and multiply it by the weights of Layer 3.</p>
-            <div class="formula-box" style="font-size: 1rem; text-align: left; padding-left: 10%;">
-                [o_in] = [h2_out] × [Weights_L3] + [Biases]<br><br>
-                [0.952, 0.952, 0.916] × W_kl + [1.0, 1.0, 1.0] = <strong>[1.7, 2.9, 2.7]</strong>
+
+            <!-- LAYER 3 -->
+            <h3 style="margin-top: 40px;">Step 3: Layer 3 Matrix Operation + Softmax Activation</h3>
+            <p>Finally, we push Layer 2's output through the last layer of weights (<code>W_kl</code>) to get our final output values.</p>
+            
+            <div class="math-container">
+                <div class="math-row">
+                    <div>
+                        <div class="matrix-label">[h2_out]</div>
+                        <div class="matrix">
+                            <div class="matrix-row">
+                                <div class="matrix-cell">0.952</div><div class="matrix-cell">0.952</div><div class="matrix-cell">0.916</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="math-operator">×</div>
+                    <div>
+                        <div class="matrix-label">Weights (L3)</div>
+                        <div class="matrix">
+                            <div class="matrix-row"><div class="matrix-cell">0.2</div><div class="matrix-cell">0.5</div><div class="matrix-cell">0.3</div></div>
+                            <div class="matrix-row"><div class="matrix-cell">0.4</div><div class="matrix-cell">0.6</div><div class="matrix-cell">0.8</div></div>
+                            <div class="matrix-row"><div class="matrix-cell">0.1</div><div class="matrix-cell">0.9</div><div class="matrix-cell">0.7</div></div>
+                        </div>
+                    </div>
+                    <div class="math-operator">+</div>
+                    <div>
+                        <div class="matrix-label">Biases</div>
+                        <div class="matrix">
+                            <div class="matrix-row">
+                                <div class="matrix-cell">1.0</div><div class="matrix-cell">1.0</div><div class="matrix-cell">1.0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="math-operator">=</div>
+                    <div>
+                        <div class="matrix-label">[o_in]</div>
+                        <div class="matrix">
+                            <div class="matrix-row" style="font-weight: bold; color: var(--primary-color);">
+                                <div class="matrix-cell">1.7</div><div class="matrix-cell">2.9</div><div class="matrix-cell">2.7</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p>Because this is the final layer and we want a probability distribution that sums to 1 across multiple classes, we apply the <strong>Softmax Activation Function</strong>: <code>Softmax = e<sup>x</sup> / Σ e<sup>x</sup></code></p>
-            <p>After calculating the exponential proportions for all three nodes, we get:</p>
-            <p><strong>Final Predicted Output (o_out):</strong> <code>[0.1420, 0.4717, 0.3862]</code></p>
 
-            <div class="warning-box">
-                <h4>📉 Step 4: Measuring the Generated Error</h4>
-                <p>We have finished the forward pass. Now we compare our prediction to the actual truth.</p>
-                <ul>
-                    <li><strong>Expected Output:</strong> <code>[0.0, 1.0, 0.0]</code></li>
-                    <li><strong>Our Prediction:</strong> <code>[0.1420, 0.4717, 0.3862]</code></li>
-                </ul>
-                <p>The network uses the <strong>Logistic Loss (Log Loss) / Binary Crossentropy</strong> formula to calculate exactly how wrong this prediction is, which is then used in Back-Propagation to fix the weights:</p>
-                <div class="formula-box" style="font-size: 1rem;">
+            <p><strong>Applying Softmax Activation:</strong> <code>Softmax = e<sup>x</sup> / Σ e<sup>x</sup></code></p>
+            <p>Softmax is used at the output layer to convert raw node values into a normalized probability distribution (where all values add up to exactly 1.0).</p>
+            
+            <p><strong>Final Predicted Output [o_out]:</strong> <code style="font-size:1.1rem;">[0.1420, 0.4717, 0.3862]</code></p>
+
+            <!-- ERROR MEASUREMENT -->
+            <div class="warning-box" style="margin-top: 30px;">
+                <h4>📉 Step 4: Measuring the Generated Error (Loss)</h4>
+                <p>The forward pass is complete. Now the network compares our prediction to the actual truth to find out how wrong it is.</p>
+                
+                <table style="background: white; width: 80%; margin: 15px auto;">
+                    <tr>
+                        <td><strong>Expected Actual Output (y):</strong></td>
+                        <td><code style="background: #d4edda; color: #155724;">[0.0, 1.0, 0.0]</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Our Network's Prediction:</strong></td>
+                        <td><code style="background: #f8d7da; color: #721c24;">[0.1420, 0.4717, 0.3862]</code></td>
+                    </tr>
+                </table>
+
+                <p>The network calculates the exact error using the <strong>Logistic Loss (Log Loss)</strong> or <strong>Binary Crossentropy</strong> formula. This error value is then sent backward through the network (Back-Propagation) to adjust the Weights to be more accurate next time!</p>
+                <div class="formula-box" style="font-size: 1rem; border: none; padding: 10px;">
                     Log Loss = -y<sub>i</sub> * log(o_out<sub>i</sub>) - (1 - y<sub>i</sub>) * log(1 - o_out<sub>i</sub>)
                 </div>
             </div>
         </section>
-
         <!-- Section 4 -->
         <section class="content-box">
             <h2>4. ANN Training Methodology (The 7 Steps)</h2>
