@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3. Pixel Relationships & Adjacency - DIP Study Guide</title>
+    <style>
+        :root {
+            --primary-color: #e06d06;
+            --secondary-color: #2c3e50;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --exam-highlight: #e8f4f8;
+            --exam-border: #17a2b8;
+            --danger-bg: #fff3cd;
+            --danger-border: #ffc107;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin-top: 20px;
+        }
+
+        .content-box {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .exam-focus {
+            background-color: var(--exam-highlight);
+            border-left: 5px solid var(--exam-border);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .exam-focus h4 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+
+        .warning-box {
+            background-color: var(--danger-bg);
+            border-left: 5px solid var(--danger-border);
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            margin-top: 0;
+            color: #856404;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        table, th, td {
+            border: 1px solid #dee2e6;
+        }
+
+        th, td {
+            padding: 12px;
+        }
+
+        th {
+            background-color: #f1f3f5;
+            color: var(--secondary-color);
+        }
+
+        .grid-table td {
+            width: 33%;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        .highlight-p {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 4px;
+            color: #d63384;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .step-list {
+            list-style-type: decimal;
+            margin-left: 20px;
+        }
+        .step-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Module 3: Pixel Relationships & Adjacency</h1>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Index</a>
+
+        <!-- Section 1 -->
+        <section class="content-box">
+            <h2>1. Basic Relationships: Neighbors of a Pixel</h2>
+            <p>Any image can be represented on a coordinate grid. Let a pixel <strong>p</strong> be located at coordinates <code>(x, y)</code>.</p>
+            
+            <table class="grid-table">
+                <tr>
+                    <td>(x-1, y+1)</td>
+                    <td>(x, y+1) <br><em>Top</em></td>
+                    <td>(x+1, y+1)</td>
+                </tr>
+                <tr>
+                    <td>(x-1, y) <br><em>Left</em></td>
+                    <td class="highlight-p">p (x, y)</td>
+                    <td>(x+1, y) <br><em>Right</em></td>
+                </tr>
+                <tr>
+                    <td>(x-1, y-1)</td>
+                    <td>(x, y-1) <br><em>Bottom</em></td>
+                    <td>(x+1, y-1)</td>
+                </tr>
+            </table>
+
+            <h3>Categories of Neighbors:</h3>
+            <ul>
+                <li><strong>4-Neighbors ( N<sub>4</sub>(p) ):</strong> The horizontal and vertical neighbors.<br>
+                Coordinates: <code>(x+1, y)</code>, <code>(x-1, y)</code>, <code>(x, y+1)</code>, <code>(x, y-1)</code>.</li>
+                <li><strong>Diagonal Neighbors ( N<sub>D</sub>(p) ):</strong> The four diagonal neighbors.<br>
+                Coordinates: <code>(x+1, y+1)</code>, <code>(x+1, y-1)</code>, <code>(x-1, y+1)</code>, <code>(x-1, y-1)</code>.</li>
+                <li><strong>8-Neighbors ( N<sub>8</sub>(p) ):</strong> The union of 4-neighbors and diagonal neighbors.<br>
+                Formula: <code>N<sub>8</sub>(p) = N<sub>4</sub>(p) + N<sub>D</sub>(p)</code></li>
+            </ul>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="content-box">
+            <h2>2. Adjacency & Connectivity</h2>
+            <div class="warning-box">
+                <h4>⚠️ EXAM TRAP: Neighbor vs. Adjacent</h4>
+                <p>Just because two pixels touch (are neighbors) does <strong>NOT</strong> mean they are adjacent! <br>
+                <strong>Definition:</strong> Two pixels are adjacent <em>ONLY IF</em> they are neighbors <strong>AND</strong> their intensity values belong to a specific set of allowed values, denoted as <code>V</code>.</p>
+            </div>
+            <ul>
+                <li><strong>Binary Images:</strong> Pixels are adjacent if they are neighbors & have the same intensity values (e.g., V = {1}).</li>
+                <li><strong>Grayscale Images:</strong> The set <code>V</code> might contain multiple values (e.g., V = {128, 129, 130...}).</li>
+            </ul>
+
+            <h3>Why do we need Adjacency Information? (Applications)</h3>
+            <p>Adjacency defines how pixels/regions are connected. It is used heavily in these 5 areas:</p>
+            <ol>
+                <li><strong>Object Segmentation:</strong> Determines which pixels belong to the same object (e.g., medical imaging - do scattered cancer cells form one tumor or multiple?).</li>
+                <li><strong>Edge Detection:</strong> Identifies boundaries between objects by checking pixel connectivity (e.g., lips vs. skin).</li>
+                <li><strong>Noise Removal:</strong> Isolates disconnected noisy pixels (like salt-and-pepper noise) from meaningful regions.</li>
+                <li><strong>Pathfinding (Robotics/AI):</strong> Navigating maps using 4-connected vs. 8-connected paths.</li>
+                <li><strong>Morphological Operations:</strong> Dilation/Erosion; adjacency defines how shapes grow or shrink.</li>
+            </ol>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="content-box">
+            <h2>3. Types of Adjacency (The Rules)</h2>
+            <p>Let pixels <code>p</code> and <code>q</code> have values from the set <code>V</code>.</p>
+            
+            <ul>
+                <li><strong>4-Adjacency:</strong> <code>p</code> and <code>q</code> are 4-adjacent if <code>q</code> is in the set <code>N<sub>4</sub>(p)</code>.</li>
+                <li><strong>8-Adjacency:</strong> <code>p</code> and <code>q</code> are 8-adjacent if <code>q</code> is in the set <code>N<sub>8</sub>(p)</code>.</li>
+            </ul>
+
+            <div class="exam-focus">
+                <h4>🔥 Mixed Adjacency (m-Adjacency) - GUARANTEED EXAM QUESTION</h4>
+                <p>Two pixels <code>p</code> and <code>q</code> with values from <code>V</code> are m-adjacent if:</p>
+                <ul style="list-style-type: none;">
+                    <li><strong>(i)</strong> <code>q</code> is in <code>N<sub>4</sub>(p)</code></li>
+                    <li style="text-align: center; font-weight: bold; margin: 10px 0;">— OR —</li>
+                    <li><strong>(ii)</strong> <code>q</code> is in <code>N<sub>D</sub>(p)</code> <strong>AND</strong> the intersection <code>N<sub>4</sub>(p) ∩ N<sub>4</sub>(q)</code> has <strong>NO pixels</strong> whose values are from <code>V</code>.</li>
+                </ul>
+                <p><em>Plain English Translation of Rule (ii):</em> If p and q are diagonal to each other, look at the two pixels they share as common 4-neighbors. If <strong>both</strong> of those shared pixels have values that are NOT in set V, then p and q are m-adjacent. If even one shared neighbor is in set V, they are NOT m-adjacent. This prevents multiple path ambiguities.</p>
+            </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="content-box">
+            <h2>4. Exam Walkthrough: Solving m-Adjacency</h2>
+            <p>Given the set <strong>V = { 1 }</strong>. Let's analyze the following grid of pixels (labeled <em>a</em> through <em>i</em> for location reference):</p>
+            
+            <table style="width: 50%; margin: 0 auto; font-size: 1.2rem; font-family: monospace;">
+                <tr>
+                    <td>0 <sub>a</sub></td>
+                    <td>1 <sub>b</sub></td>
+                    <td>1 <sub>c</sub></td>
+                </tr>
+                <tr>
+                    <td>0 <sub>d</sub></td>
+                    <td>1 <sub>e</sub></td>
+                    <td>0 <sub>f</sub></td>
+                </tr>
+                <tr>
+                    <td>0 <sub>g</sub></td>
+                    <td>0 <sub>h</sub></td>
+                    <td>1 <sub>i</sub></td>
+                </tr>
+            </table>
+
+            <h3 style="margin-top:30px;">Example 1: Are <code>b</code> and <code>c</code> m-adjacent?</h3>
+            <ul class="step-list">
+                <li>Look at their positions: <code>b</code> is (top-mid), <code>c</code> is (top-right).</li>
+                <li>Are they 4-neighbors? <strong>Yes.</strong> <code>c</code> is immediately to the right of <code>b</code>.</li>
+                <li>Since condition (i) is met, they <strong>ARE</strong> m-adjacent.</li>
+            </ul>
+
+            <h3>Example 2: Are <code>b</code> and <code>e</code> m-adjacent?</h3>
+            <ul class="step-list">
+                <li>Look at their positions: <code>b</code> is (top-mid), <code>e</code> is (center).</li>
+                <li>Are they 4-neighbors? <strong>Yes.</strong> <code>b</code> is directly above <code>e</code>.</li>
+                <li>Since condition (i) is met, they <strong>ARE</strong> m-adjacent.</li>
+            </ul>
+
+            <h3>Example 3: Are <code>e</code> and <code>i</code> m-adjacent?</h3>
+            <ul class="step-list">
+                <li>Look at their positions: <code>e</code> is (center), <code>i</code> is (bottom-right).</li>
+                <li>Are they 4-neighbors? No, they are diagonal. We must check condition (ii).</li>
+                <li>Find their shared 4-neighbors: <code>N<sub>4</sub>(e) ∩ N<sub>4</sub>(i)</code>. The pixels mutually touching both are <code>f</code> (mid-right) and <code>h</code> (bottom-mid).</li>
+                <li>Check the values of <code>f</code> and <code>h</code>. Pixel <code>f = 0</code>. Pixel <code>h = 0</code>.</li>
+                <li>Are either of these values in V={1}? No. Therefore, the intersection has no pixels from V.</li>
+                <li>Because the intersection is empty of V, they <strong>ARE</strong> m-adjacent.</li>
+            </ul>
+
+            <div class="warning-box">
+                <h4>Example 4: Are <code>e</code> and <code>c</code> m-adjacent? (The Tricky One)</h4>
+                <ul class="step-list">
+                    <li>Look at their positions: <code>e</code> is (center), <code>c</code> is (top-right).</li>
+                    <li>Are they 4-neighbors? No, they are diagonal. We must check condition (ii).</li>
+                    <li>Find their shared 4-neighbors: <code>N<sub>4</sub>(e) ∩ N<sub>4</sub>(c)</code>. The pixels mutually touching both are <code>b</code> (top-mid) and <code>f</code> (mid-right).</li>
+                    <li>Check the values of <code>b</code> and <code>f</code>. Pixel <code>b = 1</code>. Pixel <code>f = 0</code>.</li>
+                    <li>Are either of these values in V={1}? <strong>YES.</strong> Pixel <code>b</code> has a value of 1.</li>
+                    <li>Because the intersection contains a pixel from V, condition (ii) fails.</li>
+                    <li>Therefore, they are <strong>NOT</strong> m-adjacent.</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>CSE 4883 • Digital Image Processing Study Guide</p>
+    </footer>
+
+</body>
+</html>
