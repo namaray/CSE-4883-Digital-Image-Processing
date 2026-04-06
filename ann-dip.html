@@ -228,6 +228,74 @@
             </table>
         </section>
 
+        <!-- Section: Mathematical Simulation (Forward Pass) -->
+        <section class="content-box">
+            <h2>3.5 Mathematical Simulation of a Forward Pass</h2>
+            <p>Based on the architecture slides, here is a step-by-step matrix calculation showing how data moves through an ANN and how different activation functions alter the data at each layer.</p>
+            
+            <div class="exam-focus">
+                <h4>🧠 The Setup</h4>
+                <p>We have an ANN with 3 inputs, 2 hidden layers, and 1 output layer.</p>
+                <ul>
+                    <li><strong>Inputs (I):</strong> <code>[0.1,  0.3,  0.5]</code></li>
+                    <li><strong>Expected Outputs (y):</strong> <code>[0.0,  1.0,  0.0]</code></li>
+                    <li><strong>Biases (b):</strong> Assumed to be <code>[1.0,  1.0,  1.0]</code> for each layer.</li>
+                    <li><em>Note: Weights (W) are randomly initialized to small numbers between 0 and 1.</em></li>
+                </ul>
+            </div>
+
+            <h3>Step 1: Layer 1 Matrix Operation + ReLU Activation</h3>
+            <p>First, we calculate the dot product of Inputs and Weights, then add the bias.</p>
+            <div class="formula-box" style="font-size: 1rem; text-align: left; padding-left: 10%;">
+                [h1_in] = [Inputs] × [Weights_L1] + [Biases]<br><br>
+                [0.1, 0.3, 0.5] × W_ij + [1.0, 1.0, 1.0] = <strong>[1.2, 1.6, 1.5]</strong>
+            </div>
+            <p>Next, we apply the <strong>ReLU Activation Function</strong>: <code>ReLU = max(0, x)</code></p>
+            <ul>
+                <li><code>max(0, 1.2) = 1.2</code></li>
+                <li><code>max(0, 1.6) = 1.6</code></li>
+                <li><code>max(0, 1.5) = 1.5</code></li>
+            </ul>
+            <p><strong>Layer 1 Output:</strong> <code>[1.2, 1.6, 1.5]</code></p>
+
+            <h3>Step 2: Layer 2 Matrix Operation + Sigmoid Activation</h3>
+            <p>We take the output from Layer 1 and multiply it by the weights of Layer 2.</p>
+            <div class="formula-box" style="font-size: 1rem; text-align: left; padding-left: 10%;">
+                [h2_in] = [h1_out] × [Weights_L2] + [Biases]<br><br>
+                [1.2, 1.6, 1.5] × W_jk + [1.0, 1.0, 1.0] = <strong>[3.0, 3.0, 2.4]</strong>
+            </div>
+            <p>Next, we apply the <strong>Sigmoid Activation Function</strong>: <code>Sigmoid = 1 / (1 + e<sup>-x</sup>)</code></p>
+            <ul>
+                <li><code>1 / (1 + e<sup>-3.0</sup>) = 0.952</code></li>
+                <li><code>1 / (1 + e<sup>-3.0</sup>) = 0.952</code></li>
+                <li><code>1 / (1 + e<sup>-2.4</sup>) = 0.916</code></li>
+            </ul>
+            <p><strong>Layer 2 Output:</strong> <code>[0.952, 0.952, 0.916]</code></p>
+
+            <h3>Step 3: Layer 3 Matrix Operation + Softmax Activation</h3>
+            <p>We take the output from Layer 2 and multiply it by the weights of Layer 3.</p>
+            <div class="formula-box" style="font-size: 1rem; text-align: left; padding-left: 10%;">
+                [o_in] = [h2_out] × [Weights_L3] + [Biases]<br><br>
+                [0.952, 0.952, 0.916] × W_kl + [1.0, 1.0, 1.0] = <strong>[1.7, 2.9, 2.7]</strong>
+            </div>
+            <p>Because this is the final layer and we want a probability distribution that sums to 1 across multiple classes, we apply the <strong>Softmax Activation Function</strong>: <code>Softmax = e<sup>x</sup> / Σ e<sup>x</sup></code></p>
+            <p>After calculating the exponential proportions for all three nodes, we get:</p>
+            <p><strong>Final Predicted Output (o_out):</strong> <code>[0.1420, 0.4717, 0.3862]</code></p>
+
+            <div class="warning-box">
+                <h4>📉 Step 4: Measuring the Generated Error</h4>
+                <p>We have finished the forward pass. Now we compare our prediction to the actual truth.</p>
+                <ul>
+                    <li><strong>Expected Output:</strong> <code>[0.0, 1.0, 0.0]</code></li>
+                    <li><strong>Our Prediction:</strong> <code>[0.1420, 0.4717, 0.3862]</code></li>
+                </ul>
+                <p>The network uses the <strong>Logistic Loss (Log Loss) / Binary Crossentropy</strong> formula to calculate exactly how wrong this prediction is, which is then used in Back-Propagation to fix the weights:</p>
+                <div class="formula-box" style="font-size: 1rem;">
+                    Log Loss = -y<sub>i</sub> * log(o_out<sub>i</sub>) - (1 - y<sub>i</sub>) * log(1 - o_out<sub>i</sub>)
+                </div>
+            </div>
+        </section>
+
         <!-- Section 4 -->
         <section class="content-box">
             <h2>4. ANN Training Methodology (The 7 Steps)</h2>
