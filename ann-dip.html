@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4. Artificial Neural Networks in DIP - Study Guide</title>
+    <style>
+        :root {
+            --primary-color: #e06d06;
+            --secondary-color: #2c3e50;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --exam-highlight: #e8f4f8;
+            --exam-border: #17a2b8;
+            --code-bg: #2d2d2d;
+            --code-text: #f8f8f2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+
+        h1 { margin: 0; font-size: 2rem; }
+        
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-top: 40px;
+        }
+
+        h3 { color: var(--primary-color); margin-top: 25px; }
+
+        .content-box {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .exam-focus {
+            background-color: var(--exam-highlight);
+            border-left: 5px solid var(--exam-border);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .exam-focus h4 { margin-top: 0; color: #0c5460; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td { border: 1px solid #dee2e6; }
+        th, td { padding: 12px; text-align: left; }
+        th { background-color: #f1f3f5; color: var(--secondary-color); }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+        }
+
+        .inline-code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 4px;
+            color: #d63384;
+            font-family: monospace;
+        }
+
+        .step-list {
+            list-style-type: decimal;
+            margin-left: 20px;
+        }
+        .step-list li {
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+        
+        .formula-box {
+            text-align: center;
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px solid #ced4da;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Module 4: Artificial Neural Networks (ANN) in DIP</h1>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Index</a>
+
+        <!-- Section 1 -->
+        <section class="content-box">
+            <h2>1. Forms of Learning in AI</h2>
+            <p>An agent is "learning" if it improves its performance on future tasks after making observations about the world. There are three main types based on feedback:</p>
+            <ul>
+                <li><strong>Unsupervised Learning:</strong> Agent learns patterns in the input with NO explicit feedback supplied. (Example: Clustering "good traffic days" vs "bad traffic days").</li>
+                <li><strong>Reinforcement Learning:</strong> Agent learns from a series of reinforcements (rewards or punishments). (Example: Winning points in chess).</li>
+                <li><strong>Supervised Learning:</strong> Agent observes example input-output pairs and learns a function that maps inputs to outputs.</li>
+            </ul>
+
+            <div class="exam-focus">
+                <h4>🎯 EXAM TRIVIA: Supervised Learning Categories</h4>
+                <ul>
+                    <li><strong>Classification:</strong> Output <code>y</code> is a finite set of values (e.g., sunny, cloudy, rainy). If there are only two values (0 or 1), it is called <em>Binary Classification</em>.</li>
+                    <li><strong>Regression:</strong> Output <code>y</code> is a continuous number (e.g., tomorrow's temperature).</li>
+                </ul>
+                <p><em>Definitions to know:</em> <br>
+                <strong>Training Set:</strong> N example input-output pairs. <br>
+                <strong>Hypothesis:</strong> A possible function for generating output. <br>
+                <strong>Test Set:</strong> Examples distinct from the training set.</p>
+            </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="content-box">
+            <h2>2. Basics of Artificial Neural Networks (ANN)</h2>
+            <p>ANNs are brain-inspired systems intended to replicate how humans learn. They consist of nodes (imitating biological neurons) connected by links (imitating axons/dendrites).</p>
+            
+            <h3>Topology / Architecture</h3>
+            <ul>
+                <li><strong>Single-layer perceptron:</strong> Suitable for simple, linear problems.</li>
+                <li><strong>Multi-layer perceptron:</strong> Suitable for complex, non-linear problems.</li>
+                <li><strong>FeedForward vs Feedback:</strong> In FeedForward, data moves only in one direction (left to right).</li>
+            </ul>
+
+            <h3>Layers of an ANN</h3>
+            <ol>
+                <li><strong>Input Layer:</strong> Number of neurons corresponds to the number of features/inputs.</li>
+                <li><strong>Hidden Layer(s):</strong> Arbitrary number of layers with an arbitrary number of neurons. This is where input transformations occur.</li>
+                <li><strong>Output Layer:</strong> Number of neurons corresponds to the number of expected output values.</li>
+            </ol>
+            
+            <div class="formula-box">
+                Mathematical Model of a Node: a = g(W*X + b)
+            </div>
+            <p>Where <code>X</code> = Inputs, <code>W</code> = Weights, <code>b</code> = Bias, and <code>g()</code> = Activation Function. The result <code>a</code> is called the <strong>activation or node value</strong>.</p>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="content-box">
+            <h2>3. Activation Functions (Transfer Functions)</h2>
+            <p>Their main purpose is to convert an input signal of a node into an output signal. They map the resulting values to specific ranges.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Type</th>
+                        <th>Range</th>
+                        <th>Characteristics / Exam Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Linear</strong></td>
+                        <td>Linear</td>
+                        <td>(-∞ to +∞)</td>
+                        <td>Equation: <code>f(x) = x</code>. Output is not confined. Rarely used in complex hidden layers.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sigmoid (Logistic)</strong></td>
+                        <td>Non-Linear</td>
+                        <td>(0 to 1)</td>
+                        <td>S-shaped. <strong>Crucial for probability prediction.</strong> Best for Binary Classification output layers.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tanh</strong></td>
+                        <td>Non-Linear</td>
+                        <td>(-1 to 1)</td>
+                        <td>Also S-shaped but crosses zero. Generally better than Sigmoid for hidden layers in feed-forward nets.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ReLU</strong></td>
+                        <td>Non-Linear</td>
+                        <td>[0 to +∞)</td>
+                        <td>Rectified Linear Unit. <strong>Most used activation function in the world right now</strong> (especially in CNNs and Deep Learning). Half-rectified: <code>f(z) = 0</code> if <code>z < 0</code>, and <code>f(z) = z</code> if <code>z >= 0</code>.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="content-box">
+            <h2>4. ANN Training Methodology (The 7 Steps)</h2>
+            <p>How an ANN actually learns. Memorize this sequence for the exam:</p>
+            <ol class="step-list">
+                <li><strong>Initialize:</strong> Randomly initialize the Weights to a small number close to 0 (but not exactly 0).</li>
+                <li><strong>Input:</strong> Input the first observation of your dataset into the input layer (one feature per node).</li>
+                <li><strong>Forward-Propagation:</strong> From left to right, neurons are activated. Propagate the activations until you get the predicted result <code>y</code>.</li>
+                <li><strong>Error Evaluation:</strong> Compare the predicted result to the actual expected result to measure the generated error.</li>
+                <li><strong>Back-Propagation:</strong> From right to left, the error is back-propagated. Update the weights according to how much they are responsible for the error. The <strong>Learning Rate</strong> decides how drastically to update the weights.</li>
+                <li><strong>Repeat:</strong> Repeat steps 1 to 5, updating weights after each observation.</li>
+                <li><strong>Epoch:</strong> When the <em>whole training set</em> has passed through the ANN, that constitutes <strong>one epoch</strong>. Redo for multiple epochs.</li>
+            </ol>
+
+            <div class="exam-focus">
+                <h4>⚖️ Gradient Descent & Batch Sizes</h4>
+                <p>The update algorithm used to improve the model (move down the error gradient). The slide explicitly defines these three variations:</p>
+                <ul>
+                    <li><strong>Batch Gradient Descent:</strong> Batch Size = Size of Entire Training Set.</li>
+                    <li><strong>Stochastic Gradient Descent (SGD):</strong> Batch Size = 1.</li>
+                    <li><strong>Mini-Batch Gradient Descent:</strong> 1 < Batch Size < Size of Training Set.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 5 -->
+        <section class="content-box">
+            <h2>5. Practical Implementation (Keras Workflow)</h2>
+            <p>Based on the Bank Customer Churn dataset (predicting if a customer leaves or stays).</p>
+
+            <h3>A. Data Preprocessing</h3>
+            <ul>
+                <li><strong>Libraries:</strong> <code>numpy</code> (arrays), <code>pandas</code> (datasets), <code>matplotlib</code> (graphs).</li>
+                <li><strong>Encoding Categorical Data:</strong> Converting text (Geography, Gender) into numbers using <code>LabelEncoder</code> and <code>OneHotEncoder</code>.</li>
+                <li><strong>Splitting:</strong> <code>train_test_split</code> (usually 80% train, 20% test).</li>
+                <li><strong>Feature Scaling:</strong> Crucial to ensure high numeric values (like Salary) don't overpower low ones (like Age). Use <code>StandardScaler</code>.</li>
+            </ul>
+
+            <h3>B. Building the Model</h3>
+<pre>
+# Importing Keras
+from keras.models import Sequential # Initializes ANN model
+from keras.layers import Dense      # Adds layers to ANN
+
+# 1. Initialize
+classifier = Sequential()
+
+# 2. Add Input & First Hidden Layer
+# units=6 (nodes in hidden layer), activation='relu', input_dim=11 (11 features in dataset)
+classifier.add(Dense(units=6, activation='relu', input_dim=11))
+
+# 3. Add Second Hidden Layer (input_dim not needed anymore)
+classifier.add(Dense(units=6, activation='relu'))
+
+# 4. Add Output Layer
+# units=1 (binary output: leave/stay), activation='sigmoid'
+classifier.add(Dense(units=1, activation='sigmoid'))
+</pre>
+
+            <h3>C. Compiling & Training</h3>
+<pre>
+# Compile the Model
+classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Train the Model
+classifier.fit(X_train, y_train, batch_size=10, epochs=100)
+</pre>
+            <p><strong>Exam Notes on Compilation:</strong></p>
+            <ul>
+                <li><strong>Optimizer:</strong> Algorithms to change weights/learning rate to reduce loss. <em>Examples: Adam, SGD, Adagrad, RMSprop.</em></li>
+                <li><strong>Loss Function:</strong> We use <code>binary_crossentropy</code> (or Log Loss) because the target attribute is binary (0 or 1).</li>
+                <li><strong>Metrics:</strong> Evaluates performance. <em>Examples: accuracy, F1 score.</em></li>
+            </ul>
+
+            <h3>D. Prediction & Evaluation</h3>
+<pre>
+# Predict results (Returns probabilities due to Sigmoid)
+y_pred = classifier.predict(X_test)
+
+# Convert probability to Binary (0 or 1) based on 0.5 threshold
+y_pred = (y_pred > 0.5)
+
+# Evaluate using Confusion Matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_true=y_test, y_pred=y_pred)
+</pre>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>CSE 4883 • Digital Image Processing Study Guide</p>
+    </footer>
+
+</body>
+</html>
