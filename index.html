@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Image Processing (DIP) - Study Guide</title>
+    <style>
+        :root {
+            --primary-color: #e06d06; /* Matches the UIU slide theme */
+            --secondary-color: #2c3e50;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 25px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--secondary-color);
+        }
+
+        .card h3 a {
+            text-decoration: none;
+            color: var(--secondary-color);
+        }
+
+        .card h3 a:hover {
+            color: var(--primary-color);
+        }
+
+        .card ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .card ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .card ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .placeholder-text {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 40px;
+            background-color: var(--secondary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Digital Image Processing</h1>
+        <p>CSE 4883 • Complete Study Guide</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- MIDTERM SECTION -->
+        <section id="midterm">
+            <h2>📚 Midterm Syllabus</h2>
+            <p>Topics extracted from the introductory slides, sampling & quantization, adjacency, and Artificial Neural Networks.</p>
+            
+            <div class="module-grid">
+                
+                <!-- Topic 1 -->
+                <div class="card">
+                    <h3><a href="intro-to-images.html">1. Introduction to Digital Images</a></h3>
+                    <ul>
+                        <li>What is a Digital Image? (2D Function & Pixels)</li>
+                        <li>Types of Images: Binary, Grayscale (8-bit), High Color (16-bit), True Color (24-bit RGB), 32-bit</li>
+                        <li>Bitmap Images vs. Grayscale vs. RGB</li>
+                        <li>Representation of an Image as a Matrix</li>
+                        <li>Basic Image Manipulation in Python (Links & Basics)</li>
+                    </ul>
+                </div>
+
+                <!-- Topic 2 -->
+                <div class="card">
+                    <h3><a href="sampling-quantization.html">2. Sampling, Quantization & Resolution</a></h3>
+                    <ul>
+                        <li>From Camera Sensors to Digital Files (Continuous to Discrete)</li>
+                        <li>Sampling (Digitizing Coordinate Values)</li>
+                        <li>Quantization (Digitizing Amplitude/Intensity Values)</li>
+                        <li>Spatial Resolution (DPI, Size of details) & Jagged Lines</li>
+                        <li>Intensity Resolution (Bits for quantization) & False Contouring</li>
+                    </ul>
+                </div>
+
+                <!-- Topic 3 -->
+                <div class="card">
+                    <h3><a href="pixel-adjacency.html">3. Pixel Relationships & Adjacency</a></h3>
+                    <ul>
+                        <li>Neighbors of a Pixel: 4-Neighbors (N4), Diagonal (ND), 8-Neighbors (N8)</li>
+                        <li>Adjacency Rules & Connectivity in Binary/Grayscale Images</li>
+                        <li>Types of Adjacency: 4-Adjacency, 8-Adjacency, m-Adjacency (Mixed)</li>
+                        <li>Applications: Object Segmentation, Edge Detection, Noise Removal, Pathfinding</li>
+                    </ul>
+                </div>
+
+                <!-- Topic 4 -->
+                <div class="card">
+                    <h3><a href="ann-dip.html">4. Artificial Neural Networks (ANN) in DIP</a></h3>
+                    <ul>
+                        <li>Forms of Learning: Unsupervised, Reinforcement, Supervised (Classification vs. Regression)</li>
+                        <li>Basic Structure of ANN: Input, Hidden, and Output Layers</li>
+                        <li>Math of ANN: Weights, Biases, and Node Values / Activations</li>
+                        <li>Activation Functions: Linear, Sigmoid, Tanh, ReLU, Softmax</li>
+                        <li>ANN Methodology: Forward-Propagation & Back-Propagation (Epochs, Batch Size)</li>
+                        <li>Practical Implementation in Keras: Sequential Model, Dense Layers, Optimizers (Adam), Loss Functions, Confusion Matrix</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FINAL SECTION -->
+        <section id="final">
+            <h2>🎓 Final Syllabus</h2>
+            <p class="placeholder-text">Content for the final exam will be added here as the semester progresses. (Placeholders below)</p>
+            
+            <div class="module-grid">
+                
+                <div class="card">
+                    <h3><a href="#!">5. Image Enhancement in Spatial Domain</a></h3>
+                    <ul>
+                        <li>Point Processing (Thresholding, Negative, Log Transformations)</li>
+                        <li>Histogram Processing & Equalization</li>
+                        <li>Spatial Filtering (Smoothing, Sharpening, Laplacians)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3><a href="#!">6. Image Enhancement in Frequency Domain</a></h3>
+                    <ul>
+                        <li>Fourier Transforms</li>
+                        <li>Low-pass & High-pass Filters</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3><a href="#!">7. Morphological Image Processing</a></h3>
+                    <ul>
+                        <li>Dilation and Erosion</li>
+                        <li>Opening and Closing</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Created for CSE 4883: Digital Image Processing Study Guide</p>
+    </footer>
+
+</body>
+</html>
