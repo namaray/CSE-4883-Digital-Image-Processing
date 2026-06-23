@@ -6,7 +6,7 @@
     <title>Digital Image Processing (DIP) - Study Guide</title>
     <style>
         :root {
-            --primary-color: #e06d06; /* Matches the UIU slide theme */
+            --primary-color: #e06d06;
             --secondary-color: #2c3e50;
             --background: #f8f9fa;
             --card-bg: #ffffff;
@@ -31,16 +31,8 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-        }
-
-        header p {
-            margin: 10px 0 0 0;
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
+        header h1 { margin: 0; font-size: 2.5rem; }
+        header p { margin: 10px 0 0 0; font-size: 1.2rem; opacity: 0.9; }
 
         .container {
             max-width: 900px;
@@ -53,32 +45,36 @@
             border-bottom: 2px solid var(--primary-color);
             padding-bottom: 10px;
             margin-top: 40px;
+            font-size: 1.5rem;
         }
 
         .module-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 16px;
             margin-top: 20px;
         }
 
+        /* === CLICKABLE CARD === */
         .card {
             background-color: var(--card-bg);
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            padding: 25px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            padding: 20px 25px;
             border-left: 5px solid var(--primary-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
         }
 
         .card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.12);
         }
 
         .card h3 {
-            margin-top: 0;
+            margin: 0 0 10px 0;
             color: var(--secondary-color);
+            font-size: 1.05rem;
         }
 
         .card h3 a {
@@ -86,21 +82,20 @@
             color: var(--secondary-color);
         }
 
-        .card h3 a:hover {
-            color: var(--primary-color);
-        }
+        .card h3 a:hover { color: var(--primary-color); }
 
         .card ul {
             list-style-type: none;
             padding-left: 0;
-            margin-bottom: 0;
+            margin: 0;
         }
 
         .card ul li {
             position: relative;
-            padding-left: 20px;
-            margin-bottom: 8px;
+            padding-left: 18px;
+            margin-bottom: 5px;
             color: var(--text-muted);
+            font-size: 0.93rem;
         }
 
         .card ul li::before {
@@ -111,15 +106,48 @@
             font-weight: bold;
         }
 
-        .placeholder-text {
-            color: var(--text-muted);
-            font-style: italic;
+        /* === COMING SOON CARD === */
+        .card.coming-soon {
+            border-left-color: #ced4da;
+            background-color: #f8f9fa;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .card.coming-soon:hover {
+            transform: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+        }
+
+        .card.coming-soon h3 {
+            color: #adb5bd;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-ready {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-soon {
+            background-color: #e2e3e5;
+            color: #6c757d;
         }
 
         footer {
             text-align: center;
             padding: 2rem 0;
-            margin-top: 40px;
+            margin-top: 50px;
             background-color: var(--secondary-color);
             color: white;
         }
@@ -129,119 +157,139 @@
 
     <header>
         <h1>Digital Image Processing</h1>
-        <p>CSE 4883 • Complete Study Guide</p>
+        <p>CSE 4883 &bull; Complete Study Guide</p>
     </header>
 
     <div class="container">
-        
-        <!-- MIDTERM SECTION -->
+
+        <!-- ===== MIDTERM SECTION ===== -->
         <section id="midterm">
-            <h2>📚 Midterm Syllabus</h2>
-            <p>Topics extracted from the introductory slides, sampling & quantization, adjacency, and Artificial Neural Networks.</p>
-            
+            <h2>&#128218; Midterm Syllabus</h2>
+
             <div class="module-grid">
-                
-                <!-- Topic 1 -->
+
                 <div class="card">
-                    <h3><a href="intro-to-images.html">1. Introduction to Digital Images</a></h3>
+                    <h3>
+                        <a href="intro-to-images.html">1. Introduction to Digital Images</a>
+                        <span class="badge badge-ready">&#10003; Notes Ready</span>
+                    </h3>
                     <ul>
-                        <li>What is a Digital Image? (2D Function & Pixels)</li>
-                        <li>Types of Images: Binary, Grayscale (8-bit), High Color (16-bit), True Color (24-bit RGB), 32-bit</li>
+                        <li>What is a Digital Image? (2D Function &amp; Pixels)</li>
+                        <li>Types: Binary, Grayscale (8-bit), High Color (16-bit), True Color (24-bit RGB)</li>
                         <li>Bitmap Images vs. Grayscale vs. RGB</li>
                         <li>Representation of an Image as a Matrix</li>
-                        <li>Basic Image Manipulation in Python (Links & Basics)</li>
+                        <li>Basic Image Manipulation in Python</li>
                     </ul>
                 </div>
 
-                <!-- Topic 2 -->
                 <div class="card">
-                    <h3><a href="sampling-quantization.html">2. Sampling, Quantization & Resolution</a></h3>
+                    <h3>
+                        <a href="sampling-quantization.html">2. Sampling, Quantization &amp; Resolution</a>
+                        <span class="badge badge-ready">&#10003; Notes Ready</span>
+                    </h3>
                     <ul>
                         <li>From Camera Sensors to Digital Files (Continuous to Discrete)</li>
                         <li>Sampling (Digitizing Coordinate Values)</li>
                         <li>Quantization (Digitizing Amplitude/Intensity Values)</li>
-                        <li>Spatial Resolution (DPI, Size of details) & Jagged Lines</li>
-                        <li>Intensity Resolution (Bits for quantization) & False Contouring</li>
+                        <li>Spatial Resolution (DPI, Size of details) &amp; Jagged Lines</li>
+                        <li>Intensity Resolution (Bits for quantization) &amp; False Contouring</li>
                     </ul>
                 </div>
 
-                <!-- Topic 3 -->
                 <div class="card">
-                    <h3><a href="pixel-adjacency.html">3. Pixel Relationships & Adjacency</a></h3>
+                    <h3>
+                        <a href="pixel-adjacency.html">3. Pixel Relationships &amp; Adjacency</a>
+                        <span class="badge badge-ready">&#10003; Notes Ready</span>
+                    </h3>
                     <ul>
                         <li>Neighbors of a Pixel: 4-Neighbors (N4), Diagonal (ND), 8-Neighbors (N8)</li>
-                        <li>Adjacency Rules & Connectivity in Binary/Grayscale Images</li>
+                        <li>Adjacency Rules &amp; Connectivity in Binary/Grayscale Images</li>
                         <li>Types of Adjacency: 4-Adjacency, 8-Adjacency, m-Adjacency (Mixed)</li>
                         <li>Applications: Object Segmentation, Edge Detection, Noise Removal, Pathfinding</li>
                     </ul>
                 </div>
 
-                <!-- Topic 3.5 -->
                 <div class="card">
-                    <h3><a href="path-connectivity-distance.html">3.5. Path, Connectivity & Distance Measures</a></h3>
+                    <h3>
+                        <a href="path-connectivity-distance.html">4. Path, Connectivity &amp; Distance Measures</a>
+                        <span class="badge badge-ready">&#10003; Notes Ready</span>
+                    </h3>
                     <ul>
                         <li>Digital Paths: Definition, Length, 4-path, 8-path, m-path</li>
-                        <li>Connectivity, Connected Components, Regions & Boundaries</li>
-                        <li>Foreground & Background</li>
-                        <li>Distance Measures: Euclidean (De), City-Block (D4), Chessboard (D8), Dm (m-path)</li>
-                        <li>Distance Contours & Worked Examples</li>
+                        <li>Connectivity, Connected Components, Regions &amp; Boundaries</li>
+                        <li>Foreground &amp; Background</li>
+                        <li>Distance Measures: Euclidean (De), City-Block (D4), Chessboard (D8), Dm</li>
+                        <li>Distance Contours &amp; Worked Examples</li>
                     </ul>
                 </div>
 
-                <!-- Topic 4 -->
                 <div class="card">
-                    <h3><a href="ann-dip.html">4. Artificial Neural Networks (ANN) in DIP</a></h3>
+                    <h3>
+                        <a href="ann-dip.html">5. Artificial Neural Networks (ANN) in DIP</a>
+                        <span class="badge badge-ready">&#10003; Notes Ready</span>
+                    </h3>
                     <ul>
-                        <li>Forms of Learning: Unsupervised, Reinforcement, Supervised (Classification vs. Regression)</li>
+                        <li>Forms of Learning: Unsupervised, Reinforcement, Supervised</li>
                         <li>Basic Structure of ANN: Input, Hidden, and Output Layers</li>
                         <li>Math of ANN: Weights, Biases, and Node Values / Activations</li>
                         <li>Activation Functions: Linear, Sigmoid, Tanh, ReLU, Softmax</li>
-                        <li>ANN Methodology: Forward-Propagation & Back-Propagation (Epochs, Batch Size)</li>
-                        <li>Practical Implementation in Keras: Sequential Model, Dense Layers, Optimizers (Adam), Loss Functions, Confusion Matrix</li>
+                        <li>Forward-Propagation &amp; Back-Propagation (Epochs, Batch Size)</li>
+                        <li>Practical Implementation in Keras: Sequential Model, Dense Layers, Adam</li>
                     </ul>
                 </div>
 
             </div>
         </section>
 
-        <!-- FINAL SECTION -->
+        <!-- ===== FINAL SECTION ===== -->
         <section id="final">
-            <h2>🎓 Final Syllabus</h2>
-            <p>Topics from the final portion of the course — fully documented below.</p>
-            
+            <h2>&#127891; Final Syllabus</h2>
+
             <div class="module-grid">
-                
-                <div class="card">
-                    <h3><a href="#!">5. Image Enhancement in Spatial Domain</a></h3>
+
+                <div class="card coming-soon">
+                    <h3>
+                        6. Image Enhancement in Spatial Domain
+                        <span class="badge badge-soon">Coming Soon</span>
+                    </h3>
                     <ul>
                         <li>Point Processing (Thresholding, Negative, Log Transformations)</li>
-                        <li>Histogram Processing & Equalization</li>
+                        <li>Histogram Processing &amp; Equalization</li>
                         <li>Spatial Filtering (Smoothing, Sharpening, Laplacians)</li>
                     </ul>
                 </div>
 
-                <div class="card">
-                    <h3><a href="#!">6. Image Enhancement in Frequency Domain</a></h3>
+                <div class="card coming-soon">
+                    <h3>
+                        7. Image Enhancement in Frequency Domain
+                        <span class="badge badge-soon">Coming Soon</span>
+                    </h3>
                     <ul>
                         <li>Fourier Transforms</li>
-                        <li>Low-pass & High-pass Filters</li>
+                        <li>Low-pass &amp; High-pass Filters</li>
                     </ul>
                 </div>
 
                 <div class="card">
-                    <h3><a href="morphological-image-processing.html">7. Morphological Image Processing</a></h3>
+                    <h3>
+                        <a href="morphological-image-processing.html">8. Morphological Image Processing</a>
+                        <span class="badge badge-ready">&#10003; Notes Ready</span>
+                    </h3>
                     <ul>
-                        <li>Structuring Element, FIT, HIT, MISS</li>
-                        <li>Erosion (A ⊖ B): Shrinks objects, FIT condition</li>
-                        <li>Dilation (A ⊕ B): Grows objects, HIT condition</li>
+                        <li>Structuring Element (SE), FIT, HIT, MISS concepts</li>
+                        <li>Erosion (A &#8854; B): Shrinks objects, FIT condition</li>
+                        <li>Dilation (A &#8853; B): Grows objects, HIT condition</li>
                         <li>Opening = Erode then Dilate (removes protrusions)</li>
                         <li>Closing = Dilate then Erode (fills holes/gaps)</li>
-                        <li>Exam: Robot gap-filling → use Closing</li>
+                        <li>Exam: Robot gap-filling &rarr; use Closing</li>
                     </ul>
                 </div>
 
                 <div class="card">
-                    <h3><a href="image-segmentation.html">8. Image Segmentation</a></h3>
+                    <h3>
+                        <a href="image-segmentation.html">9. Image Segmentation</a>
+                        <span class="badge badge-ready">&#10003; Notes Ready</span>
+                    </h3>
                     <ul>
                         <li>Types: Semantic, Instance, Panoptic Segmentation</li>
                         <li>Traditional: Thresholding, Region-Based (Watershed), Edge Detection (Canny)</li>
@@ -252,11 +300,14 @@
                 </div>
 
                 <div class="card">
-                    <h3><a href="cnn-image-classification.html">9. CNN for Image Classification & Object Detection</a></h3>
+                    <h3>
+                        <a href="cnn-image-classification.html">10. CNN for Image Classification &amp; Object Detection</a>
+                        <span class="badge badge-ready">&#10003; Notes Ready</span>
+                    </h3>
                     <ul>
-                        <li>Images as Matrices; Kernels & Feature Maps</li>
+                        <li>Images as Matrices; Kernels &amp; Feature Maps</li>
                         <li>CNN Architecture: Conv, Stride, Padding, Pooling, Batch Norm</li>
-                        <li>Image Classification Pipeline (Cat vs. Dog)</li>
+                        <li>Image Classification Pipeline</li>
                         <li>Object Detection: Bounding Boxes (bx, by, bw, bh, c)</li>
                         <li>YOLO Algorithm: Grid-based real-time detection</li>
                         <li>Exam: Classifier vs. Detector; Pest detection with bounding boxes</li>
@@ -269,7 +320,7 @@
     </div>
 
     <footer>
-        <p>Created for CSE 4883: Digital Image Processing Study Guide</p>
+        <p>CSE 4883 &bull; Digital Image Processing Study Guide &bull; UIU</p>
     </footer>
 
 </body>
