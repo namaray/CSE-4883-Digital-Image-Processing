@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8. Image Segmentation - DIP Study Guide</title>
+    <style>
+        :root { --primary-color: #e06d06; --secondary-color: #2c3e50; --background: #f8f9fa; --card-bg: #ffffff; --text-main: #333333; --text-muted: #6c757d; --exam-highlight: #e8f4f8; --exam-border: #17a2b8; --danger-bg: #fff3cd; --danger-border: #ffc107; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--background); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
+        header { background-color: var(--secondary-color); color: white; padding: 1.5rem 0; text-align: center; }
+        h1 { margin: 0; font-size: 2rem; }
+        .container { max-width: 950px; margin: 2rem auto; padding: 0 20px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h2 { color: var(--secondary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; margin-top: 40px; }
+        h3 { color: var(--primary-color); margin-top: 25px; }
+        .content-box { background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; }
+        .exam-focus { background-color: var(--exam-highlight); border-left: 5px solid var(--exam-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .exam-focus h4 { margin-top: 0; color: #0c5460; }
+        .warning-box { background-color: var(--danger-bg); border-left: 5px solid var(--danger-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .warning-box h4 { margin-top: 0; color: #856404; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid #dee2e6; }
+        th, td { padding: 12px; text-align: left; }
+        th { background-color: #f1f3f5; color: var(--secondary-color); }
+        code { background-color: #eee; padding: 2px 5px; border-radius: 4px; color: #d63384; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+        .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .method-card { background: #f8f9fa; border-top: 4px solid var(--primary-color); border-radius: 8px; padding: 20px; }
+        .method-card h4 { margin-top: 0; color: var(--secondary-color); }
+        footer { text-align: center; padding: 2rem 0; margin-top: 40px; background-color: var(--secondary-color); color: white; }
+    </style>
+</head>
+<body>
+    <header><h1>Module 8: Image Segmentation</h1></header>
+    <div class="container">
+        <a href="index.html" class="back-link">&#8592; Back to Index</a>
+
+        <section class="content-box">
+            <h2>1. What is Image Segmentation?</h2>
+            <p><strong>Image segmentation</strong> is the process of <strong>partitioning a digital image into multiple distinct regions or segments</strong> (groups of pixels), where each segment shares similar attributes (color, intensity, texture). The goal is to simplify the representation of an image to make it more meaningful for analysis.</p>
+            <ul>
+                <li>Every pixel is assigned a label, and pixels with the same label share similar visual characteristics.</li>
+                <li>It is a critical step in computer vision pipelines — machines need to divide visual data into segments before performing segment-specific processing.</li>
+            </ul>
+            <div class="exam-focus">
+                <h4>&#127919; Types of Segmentation (Final Exam Q2a)</h4>
+                <table>
+                    <thead><tr><th>Type</th><th>What it does</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Semantic Segmentation</strong></td><td>Classifies every pixel into a category — no distinction between individual object instances</td><td>All "car" pixels labeled the same, whether it's car #1 or car #2</td></tr>
+                        <tr><td><strong>Instance Segmentation</strong></td><td>Detects and delineates each distinct object instance separately</td><td>Car #1 and Car #2 have different labels even if same class</td></tr>
+                        <tr><td><strong>Panoptic Segmentation</strong></td><td>Combines semantic + instance segmentation — full scene understanding</td><td>Every pixel classified by category AND by object identity</td></tr>
+                    </tbody>
+                </table>
+                <p><strong>For the chocolate Q2a:</strong> Counting individual chocolates (even if overlapping) requires <strong>Instance Segmentation</strong>. Classifying background parts (conveyor belt, wrappers, smudges) requires <strong>Semantic Segmentation</strong>. Both are required together.</p>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>2. Traditional Segmentation Techniques</h2>
+            <p>Image segmentation originally started from Digital Image Processing coupled with optimization algorithms. Traditional methods took a <strong>local view</strong> of features, focusing on local differences and gradients in pixels.</p>
+
+            <div class="method-grid">
+                <div class="method-card">
+                    <h4>&#127928; Thresholding</h4>
+                    <p>The <strong>simplest</strong> segmentation method. A threshold value T divides pixels into two classes:</p>
+                    <ul>
+                        <li>Pixel value &gt; T &#8594; set to <code>1</code> (foreground)</li>
+                        <li>Pixel value &le; T &#8594; set to <code>0</code> (background)</li>
+                    </ul>
+                    <p>This converts the image into a <strong>binary map</strong> (binarization). Works best when the difference in pixel values between target classes is very high.</p>
+                    <p><em>Used for: Image binarization before contour detection algorithms.</em></p>
+                </div>
+                <div class="method-card">
+                    <h4>&#127807; Region-Based Segmentation</h4>
+                    <p>Works by detecting <strong>similarities between adjacent pixels</strong> and grouping them into a common class:</p>
+                    <ol>
+                        <li>Some pixels are set as <strong>seed pixels</strong></li>
+                        <li>Algorithm detects immediate boundaries of seeds and classifies them as similar or dissimilar</li>
+                        <li>Neighbors become seeds; steps repeat until entire image is segmented</li>
+                    </ol>
+                    <p><em>Example: Watershed algorithm — starts from local maxima of Euclidean distance map, grows under the constraint that no two seeds can belong to the same region.</em></p>
+                </div>
+                <div class="method-card">
+                    <h4>&#9711; Edge Segmentation (Edge Detection)</h4>
+                    <p>Detects which pixels in an image are <strong>edge pixels</strong> and singles them out under a separate class. Edge detection is performed using special filters that estimate image gradients in x and y coordinates.</p>
+                    <p><em>Popular algorithm: <strong>Canny Edge Detection</strong> — one of the most widely used edge detection algorithms.</em></p>
+                    <p>Edge detection corresponds to classifying pixels as edge or non-edge.</p>
+                </div>
+                <div class="method-card">
+                    <h4>&#128200; Clustering-Based Segmentation</h4>
+                    <p>Uses clustering algorithms to segment an image. More accurate than traditional region-growing methods and works without a seed point.</p>
+                    <p><strong>K-means clustering:</strong> Takes all pixels and clusters them into "k" classes. Pixels with common attributes are grouped under a particular segment.</p>
+                    <p><em>Unsupervised — no labeled training data required.</em></p>
+                </div>
+            </div>
+
+            <div class="exam-focus">
+                <h4>&#127919; Evolution of Segmentation Methods</h4>
+                <ol>
+                    <li><strong>Classical (Local view):</strong> Region growing, snakes algorithm — used local differences and pixel gradients.</li>
+                    <li><strong>Global view methods:</strong> Adaptive thresholding, Otsu's algorithm, clustering algorithms — came later to give a global picture perspective.</li>
+                    <li><strong>Deep Learning:</strong> Modern methods using CNNs for end-to-end segmentation.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>3. Deep Learning-Based Segmentation</h2>
+            <p>Modern segmentation uses Convolutional Neural Networks (CNNs) to perform end-to-end segmentation. Deep learning models learn to generate segment maps as outputs corresponding to inputs fed to them.</p>
+
+            <h3>Semantic Segmentation Models</h3>
+            <ul>
+                <li>Output: <strong>n-channel segment maps</strong>, where n = number of classes.</li>
+                <li>Each of the n channels is binary — object locations filled with 1s, empty regions are 0s.</li>
+                <li>The ground truth map is a single-channel integer array the same size as input, with pixel values from 0 to n-1 (class index).</li>
+            </ul>
+
+            <h3>Convolutional Encoder-Decoder Architecture</h3>
+            <p>The encoder-decoder architecture became popular with <strong>SegNet</strong> (Badrinarayanan et al., 2015):</p>
+            <ul>
+                <li><strong>Encoder:</strong> Uses convolutional and downsampling (pooling) blocks to squeeze information into a bottleneck representation of the input.</li>
+                <li><strong>Decoder:</strong> Reconstructs input information from the bottleneck to form a segment map, highlighting regions and grouping them under their classes.</li>
+                <li><strong>Output:</strong> Sigmoid activation at the end squeezes output to range (0,1).</li>
+            </ul>
+
+            <div class="exam-focus">
+                <h4>&#127919; Encoder-Decoder Architecture Flow</h4>
+                <p><code>Input Image</code> &#8594; <strong>Encoder</strong> (Conv + Downsampling) &#8594; <strong>Bottleneck</strong> &#8594; <strong>Decoder</strong> (Upsampling + Conv) &#8594; <code>Segment Map</code></p>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>4. Applications of Image Segmentation</h2>
+            <p>Image segmentation is an important step in artificial vision — machines need to divide visual data into segments for segment-specific processing.</p>
+
+            <table>
+                <thead><tr><th>Field</th><th>Use Case</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Robotics / Machine Vision</strong></td><td>Instance segmentation for robotic grasping; recycling object picking; autonomous navigation; understanding context of environment</td></tr>
+                    <tr><td><strong>Medical Imaging</strong></td><td>X-ray segmentation; CT scan organ segmentation; dental instance segmentation; digital pathology cell segmentation; surgical video annotation</td></tr>
+                    <tr><td><strong>Autonomous Vehicles</strong></td><td>Lane detection, pedestrian detection, obstacle identification in real-time</td></tr>
+                    <tr><td><strong>Satellite / Aerial Imagery</strong></td><td>Segmenting roads, buildings, and trees from aerial images</td></tr>
+                    <tr><td><strong>Intelligent Video Analytics</strong></td><td>Activity recognition, crowd analysis, surveillance</td></tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <h4>&#9888;&#65039; Segmentation vs. Classification vs. Detection</h4>
+                <ul>
+                    <li><strong>Classification:</strong> "What is in this image?" (one label per image)</li>
+                    <li><strong>Object Detection:</strong> "What is where?" (bounding boxes + labels)</li>
+                    <li><strong>Segmentation:</strong> "Which pixel belongs to what?" (pixel-level labeling)</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    <footer><p>CSE 4883 &bull; Digital Image Processing Study Guide</p></footer>
+</body>
+</html>

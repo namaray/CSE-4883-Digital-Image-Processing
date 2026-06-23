@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9. CNN for Image Classification &amp; Object Detection - DIP Study Guide</title>
+    <style>
+        :root { --primary-color: #e06d06; --secondary-color: #2c3e50; --background: #f8f9fa; --card-bg: #ffffff; --text-main: #333333; --exam-highlight: #e8f4f8; --exam-border: #17a2b8; --danger-bg: #fff3cd; --danger-border: #ffc107; --code-bg: #2d2d2d; --code-text: #f8f8f2; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--background); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
+        header { background-color: var(--secondary-color); color: white; padding: 1.5rem 0; text-align: center; }
+        h1 { margin: 0; font-size: 2rem; }
+        .container { max-width: 950px; margin: 2rem auto; padding: 0 20px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h2 { color: var(--secondary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; margin-top: 40px; }
+        h3 { color: var(--primary-color); margin-top: 25px; }
+        .content-box { background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; }
+        .exam-focus { background-color: var(--exam-highlight); border-left: 5px solid var(--exam-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .exam-focus h4 { margin-top: 0; color: #0c5460; }
+        .warning-box { background-color: var(--danger-bg); border-left: 5px solid var(--danger-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .warning-box h4 { margin-top: 0; color: #856404; }
+        pre { background-color: var(--code-bg); color: var(--code-text); padding: 15px; border-radius: 5px; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 0.92rem; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid #dee2e6; }
+        th, td { padding: 12px; text-align: left; }
+        th { background-color: #f1f3f5; color: var(--secondary-color); }
+        code { background-color: #eee; padding: 2px 5px; border-radius: 4px; color: #d63384; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+        .formula-box { text-align: center; background: #f1f3f5; padding: 15px; border-radius: 8px; margin: 15px 0; font-family: 'Courier New', Courier, monospace; border: 1px solid #ced4da; font-weight: bold; }
+        .pipeline { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; margin: 20px 0; }
+        .pipe-step { background: var(--secondary-color); color: white; padding: 10px 15px; border-radius: 6px; font-size: 0.9rem; font-weight: bold; text-align: center; }
+        .pipe-arrow { color: var(--primary-color); font-size: 1.5rem; font-weight: bold; }
+        footer { text-align: center; padding: 2rem 0; margin-top: 40px; background-color: var(--secondary-color); color: white; }
+    </style>
+</head>
+<body>
+    <header><h1>Module 9: CNN for Image Classification &amp; Object Detection</h1></header>
+    <div class="container">
+        <a href="index.html" class="back-link">&#8592; Back to Index</a>
+
+        <section class="content-box">
+            <h2>1. From Tables to Images: The Core Problem</h2>
+            <p>Traditional ML used spreadsheet-like data (features in columns). For images, each pixel is a feature. A 256&times;256 RGB image has <strong>196,608 features</strong> — too large for standard ML algorithms.</p>
+
+            <h3>How Computers Interpret Images</h3>
+            <ul>
+                <li>Each image is composed of pixels, each with a value indicating brightness.</li>
+                <li>A <strong>grayscale image</strong> = a single 2D matrix of pixel values (0-255).</li>
+                <li>A <strong>color (RGB) image</strong> = 3 matrices stacked (Red channel, Green channel, Blue channel).</li>
+            </ul>
+
+            <h3>Classification vs. Regression on Images</h3>
+            <table>
+                <thead><tr><th>Task</th><th>Output</th><th>Example</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Classification</strong></td><td>Discrete label (0=Cat, 1=Dog)</td><td>Is this image a cat or dog?</td></tr>
+                    <tr><td><strong>Regression</strong></td><td>Continuous value(s)</td><td>Face position (x,y) in image; age estimation</td></tr>
+                    <tr><td><strong>Combined</strong></td><td>Both label and values</td><td>Detect face position (regression) AND determine gender (classification)</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="content-box">
+            <h2>2. What is a Kernel?</h2>
+            <p>A <strong>kernel</strong> (also called a filter) is a small matrix whose values are used to <strong>modify an image</strong> through convolution. The kernel slides across the image, and at each position, computes a weighted sum of the covered pixels.</p>
+            <ul>
+                <li>In CNNs, the <strong>kernel values (weights) are learned</strong> during training — not manually set.</li>
+                <li>Different kernels detect different features: edges, textures, curves, etc.</li>
+                <li>Multiple kernels are used in parallel, each producing a separate <strong>feature map</strong>.</li>
+            </ul>
+            <div class="exam-focus">
+                <h4>&#127919; Kernel &#8594; Feature Map &#8594; Classification</h4>
+                <p>The ML algorithm works by applying a series of learned kernels to the pixel matrix of an image, passing the results through activation functions, and finally producing a classification output. If the kernels and weights are properly trained, the output correctly identifies the content of the image.</p>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>3. CNN Architecture Components</h2>
+
+            <h3>Convolution Layer</h3>
+            <ul>
+                <li>Applies a kernel to the input by sliding it across the image and computing dot products at each position.</li>
+                <li><strong>Spatial invariance:</strong> Anything detectable in one small region looks the same in another region — CNNs exploit this by sharing kernel weights.</li>
+            </ul>
+
+            <h3>Stride</h3>
+            <p>The <strong>stride</strong> is the distance between successive pixels on which the kernel is centered.</p>
+            <ul>
+                <li>Larger stride &#8594; reduces the output size (roughly from n to n/stride).</li>
+                <li>Controls how much spatial information is preserved vs. compressed.</li>
+            </ul>
+
+            <h3>Padding</h3>
+            <p>Padding adds extra pixels (zeros or copies of border pixels) around the input image border to control the output size after convolution.</p>
+            <ul>
+                <li><strong>Zero padding:</strong> Adds rows/columns of 0s around the image.</li>
+                <li><strong>Replicate padding:</strong> Copies outer pixel values into the border.</li>
+            </ul>
+
+            <h3>Multiple Input Channels</h3>
+            <p>For a color (RGB) image, each kernel is 3D — it covers all 3 channels simultaneously. The kernel produces one 2D feature map as output per kernel applied.</p>
+
+            <h3>Receptive Field</h3>
+            <p>The <strong>receptive field</strong> is the region of input that influences a particular unit's output. Deeper layers have larger receptive fields, enabling detection of larger features.</p>
+
+            <h3>Pooling</h3>
+            <ul>
+                <li><strong>Average Pooling:</strong> Takes the average value within each window. When stride equals window size, it down-samples the image.</li>
+                <li><strong>Max Pooling:</strong> Takes the maximum value within each window. Acts as a feature detector — preserves the strongest activation in a region.</li>
+            </ul>
+
+            <h3>Batch Normalization</h3>
+            <p>Normalizes the activations in each mini-batch to have zero mean and unit variance:</p>
+            <div class="formula-box">z&#770; = (z - &#956;) / &radic;(&#963;&sup2; + &#949;) &nbsp;&nbsp;&nbsp; y = &#947; * z&#770; + &#946;</div>
+            <p>Where &#956; = mean, &#963; = std deviation, &#949; = small constant, &#947; and &#946; are learned parameters. Helps stabilize training and allows higher learning rates.</p>
+
+            <div class="exam-focus">
+                <h4>&#127919; Complete CNN Pipeline</h4>
+                <div class="pipeline">
+                    <div class="pipe-step">Input Image<br>(H&times;W&times;C)</div>
+                    <div class="pipe-arrow">&#8594;</div>
+                    <div class="pipe-step">Conv Layer<br>+ ReLU</div>
+                    <div class="pipe-arrow">&#8594;</div>
+                    <div class="pipe-step">Pooling<br>Layer</div>
+                    <div class="pipe-arrow">&#8594;</div>
+                    <div class="pipe-step">Conv Layer<br>+ ReLU</div>
+                    <div class="pipe-arrow">&#8594;</div>
+                    <div class="pipe-step">Pooling<br>Layer</div>
+                    <div class="pipe-arrow">&#8594;</div>
+                    <div class="pipe-step">Flatten</div>
+                    <div class="pipe-arrow">&#8594;</div>
+                    <div class="pipe-step">Fully<br>Connected</div>
+                    <div class="pipe-arrow">&#8594;</div>
+                    <div class="pipe-step">Softmax<br>Output</div>
+                </div>
+            </div>
+
+            <h3>Tensors in CNN</h3>
+            <p>Data in CNNs is represented as multi-dimensional arrays (tensors):</p>
+            <ul>
+                <li>A minibatch of 64 images of 256&times;256 RGB = tensor of size <code>256 &times; 256 &times; 3 &times; 64</code></li>
+                <li>Applying 96 kernels of size 5&times;5&times;3 with stride 2: output = <code>128 &times; 128 &times; 96 &times; 64</code> (called a <strong>Feature Map</strong>)</li>
+                <li>Each channel in the feature map carries information from one learned feature.</li>
+            </ul>
+        </section>
+
+        <section class="content-box">
+            <h2>4. CNN for Image Classification</h2>
+            <p>The core insight: instead of manually providing pixel values as features to a linear model, we let the CNN <strong>automatically learn hierarchical features</strong> (edges &#8594; shapes &#8594; objects) from raw pixel data.</p>
+
+            <h3>Training Process</h3>
+            <ol>
+                <li>Feed image through CNN (Forward Pass) &#8594; get predicted class probabilities.</li>
+                <li>Compare prediction to ground truth using a <strong>loss function</strong> (e.g., Cross-Entropy).</li>
+                <li>Backpropagate the error through the network, adjusting weights using gradient descent.</li>
+                <li>Repeat for all images across multiple epochs.</li>
+            </ol>
+
+            <div class="exam-focus">
+                <h4>&#127919; Final Exam Application (Spring 2025, Q1a)</h4>
+                <p><strong>CNN for Healthy Crop Detection:</strong></p>
+                <ol>
+                    <li><strong>DIP Preprocessing:</strong> Color space transformation (RGB to HSV for better green isolation); Histogram equalization to enhance contrast.</li>
+                    <li><strong>CNN Pipeline:</strong> Input drone image &#8594; Conv+ReLU layers (detect green regions, texture) &#8594; Pooling (reduce size) &#8594; Fully Connected &#8594; Sigmoid output (healthy=1 / not healthy=0).</li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>5. Object Detection Using CNN (YOLO Algorithm)</h2>
+            <p>Object detection combines <strong>classification</strong> (what is it?) with <strong>regression</strong> (where is it?). The output includes class labels AND bounding box coordinates.</p>
+
+            <h3>Bounding Boxes</h3>
+            <p>A bounding box is an outline that highlights an object. Each bounding box has:</p>
+            <ul>
+                <li><strong>b<sub>x</sub>, b<sub>y</sub>:</strong> Center coordinates of the bounding box</li>
+                <li><strong>b<sub>w</sub>:</strong> Width of the bounding box</li>
+                <li><strong>b<sub>h</sub>:</strong> Height of the bounding box</li>
+                <li><strong>c:</strong> Class label (e.g., person, car, capsicum)</li>
+            </ul>
+
+            <h3>YOLO (You Only Look Once)</h3>
+            <p>A popular real-time object detection algorithm based on CNN:</p>
+            <ul>
+                <li>Divides the image into a <strong>grid of equal cells</strong>.</li>
+                <li>Each grid cell detects objects whose center falls within that cell.</li>
+                <li>For each cell, the network predicts: bounding box coordinates + confidence score + class probabilities.</li>
+                <li>Non-Maximum Suppression is applied to remove duplicate detections.</li>
+            </ul>
+
+            <div class="exam-focus">
+                <h4>&#127919; Classifier vs. Object Detector (Final Exam Q1c)</h4>
+                <table>
+                    <thead><tr><th>Aspect</th><th>Image Classifier</th><th>Object Detector</th></tr></thead>
+                    <tbody>
+                        <tr><td>Output</td><td>Single class label per image</td><td>Multiple bounding boxes + class labels</td></tr>
+                        <tr><td>Use case</td><td>"Is the whole image healthy or not?"</td><td>"Where exactly are the dry patches in this image?"</td></tr>
+                        <tr><td>For Q1c (water stress across whole garden)</td><td colspan="2"><strong>Use Object Detector</strong> — needs to quantify and localize dry/wilted regions for zone-specific irrigation. A classifier can't localize regions.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="exam-focus">
+                <h4>&#127919; Pest Detection with Bounding Boxes (Final Exam Q1b)</h4>
+                <ol>
+                    <li>Apply a sliding window or region proposal method to generate candidate bounding boxes over leaf regions.</li>
+                    <li>For each bounding box region, apply CNN-based classification to detect pest damage (texture changes, bite marks).</li>
+                    <li>CNN kernels in early layers extract low-level features (edges, texture gradients), while deeper kernels capture complex patterns like bite mark shapes.</li>
+                    <li>Non-Maximum Suppression removes overlapping boxes, keeping the highest-confidence detection for each damaged area.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>6. CNN Extra: Core Concepts (from CSE 471 reference slides)</h2>
+            <table>
+                <thead><tr><th>Concept</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Spatial Invariance</strong></td><td>A feature detectable in one region looks the same in another region — this is why weight sharing works in CNNs.</td></tr>
+                    <tr><td><strong>Stride</strong></td><td>Controls kernel movement step. Larger stride = smaller output = more compression.</td></tr>
+                    <tr><td><strong>Padding</strong></td><td>Adds border pixels (zeros or copies) to preserve spatial size after convolution.</td></tr>
+                    <tr><td><strong>Max Pooling</strong></td><td>Extracts dominant features; reduces spatial size while retaining important activations.</td></tr>
+                    <tr><td><strong>Average Pooling</strong></td><td>Down-samples by averaging; less sharp than max pooling but preserves more context.</td></tr>
+                    <tr><td><strong>Batch Normalization</strong></td><td>Normalizes activations within a mini-batch, stabilizing gradient flow during training.</td></tr>
+                    <tr><td><strong>Feature Map</strong></td><td>The output of applying one kernel to an input — each channel encodes one feature type.</td></tr>
+                    <tr><td><strong>Receptive Field</strong></td><td>The region of the input image that contributes to a given neuron's output — grows with depth.</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <footer><p>CSE 4883 &bull; Digital Image Processing Study Guide</p></footer>
+</body>
+</html>

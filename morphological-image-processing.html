@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7. Morphological Image Processing - DIP Study Guide</title>
+    <style>
+        :root {
+            --primary-color: #e06d06;
+            --secondary-color: #2c3e50;
+            --background: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --exam-highlight: #e8f4f8;
+            --exam-border: #17a2b8;
+            --danger-bg: #fff3cd;
+            --danger-border: #ffc107;
+            --success-bg: #d4edda;
+            --success-border: #28a745;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--background); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
+        header { background-color: var(--secondary-color); color: white; padding: 1.5rem 0; text-align: center; }
+        h1 { margin: 0; font-size: 2rem; }
+        .container { max-width: 950px; margin: 2rem auto; padding: 0 20px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h2 { color: var(--secondary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; margin-top: 40px; }
+        h3 { color: var(--primary-color); margin-top: 25px; }
+        .content-box { background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; }
+        .exam-focus { background-color: var(--exam-highlight); border-left: 5px solid var(--exam-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .exam-focus h4 { margin-top: 0; color: #0c5460; }
+        .warning-box { background-color: var(--danger-bg); border-left: 5px solid var(--danger-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .warning-box h4 { margin-top: 0; color: #856404; }
+        .success-box { background-color: var(--success-bg); border-left: 5px solid var(--success-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .success-box h4 { margin-top: 0; color: #155724; }
+        .formula-box { text-align: center; background: #f1f3f5; padding: 15px; border-radius: 8px; margin: 15px 0; font-family: 'Courier New', Courier, monospace; border: 1px solid #ced4da; font-weight: bold; font-size: 1.05rem; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid #dee2e6; }
+        th, td { padding: 12px; text-align: left; }
+        th { background-color: #f1f3f5; color: var(--secondary-color); }
+        code { background-color: #eee; padding: 2px 5px; border-radius: 4px; color: #d63384; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+        .op-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .op-card { background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 20px; }
+        .op-card h4 { margin-top: 0; font-size: 1.1rem; }
+        .op-card.erosion { border-color: #dc3545; } .op-card.erosion h4 { color: #dc3545; }
+        .op-card.dilation { border-color: #17a2b8; } .op-card.dilation h4 { color: #17a2b8; }
+        .op-card.opening { border-color: #28a745; } .op-card.opening h4 { color: #28a745; }
+        .op-card.closing { border-color: #6f42c1; } .op-card.closing h4 { color: #6f42c1; }
+        footer { text-align: center; padding: 2rem 0; margin-top: 40px; background-color: var(--secondary-color); color: white; }
+    </style>
+</head>
+<body>
+    <header><h1>Module 7: Morphological Image Processing (MIP)</h1></header>
+    <div class="container">
+        <a href="index.html" class="back-link">&#8592; Back to Index</a>
+
+        <section class="content-box">
+            <h2>1. What is Morphological Image Processing?</h2>
+            <p><strong>Morphological Image Processing (MIP)</strong> is a collection of techniques based on image shape. Operations probe an image with a small shape called a <strong>structuring element (SE)</strong>, and based on how that shape fits into the image, pixels are classified.</p>
+            <h3>Why use MIP?</h3>
+            <ul>
+                <li>Remove <strong>imperfections</strong> in segmented images (noise, gaps, stray pixels).</li>
+                <li>Deliver information on <strong>shape and structure</strong> of objects in an image.</li>
+                <li>Used for boundary detection, region filling, and skeletonization.</li>
+            </ul>
+            <div class="exam-focus">
+                <h4>&#127919; Key Terminology</h4>
+                <ul>
+                    <li><strong>Structuring Element (SE):</strong> A small matrix/template used to traverse an image — similar to a convolution kernel, but works differently. It defines the probe shape.</li>
+                    <li><strong>FIT:</strong> The SE perfectly fits inside the image region — every SE '1' overlaps with an image '1'.</li>
+                    <li><strong>HIT:</strong> At least one SE '1' overlaps with an image '1' (partial match).</li>
+                    <li><strong>MISS:</strong> No SE '1' overlaps with any image '1' (complete mismatch).</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>2. Basic Morphological Operations</h2>
+            <div class="op-grid">
+                <div class="op-card erosion">
+                    <h4>&#128315; Erosion (A &#8854; B)</h4>
+                    <p><strong>Effect:</strong> Shrinks objects by removing boundary pixels. Eliminates small noise objects and thin protrusions.</p>
+                    <p><strong>Rule:</strong></p>
+                    <ul>
+                        <li>Output pixel = <code>1</code> if SE <strong>FITS</strong> (all SE 1s match image 1s)</li>
+                        <li>Output pixel = <code>0</code> otherwise</li>
+                    </ul>
+                </div>
+                <div class="op-card dilation">
+                    <h4>&#128316; Dilation (A &#8853; B)</h4>
+                    <p><strong>Effect:</strong> Grows objects by adding boundary pixels. Fills holes and gaps, connects broken parts.</p>
+                    <p><strong>Rule:</strong></p>
+                    <ul>
+                        <li>Output pixel = <code>1</code> if SE <strong>HITS</strong> (at least one SE 1 matches an image 1)</li>
+                        <li>Output pixel = <code>0</code> otherwise</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="exam-focus">
+                <h4>&#127919; Erosion vs. Dilation Comparison</h4>
+                <table>
+                    <thead><tr><th>Property</th><th>Erosion (&#8854;)</th><th>Dilation (&#8853;)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Effect on objects</td><td>Shrinks / removes boundary pixels</td><td>Grows / adds boundary pixels</td></tr>
+                        <tr><td>Condition</td><td>FIT (full match)</td><td>HIT (partial match)</td></tr>
+                        <tr><td>Removes small objects?</td><td>Yes</td><td>No (enlarges them)</td></tr>
+                        <tr><td>Fills holes?</td><td>No</td><td>Yes</td></tr>
+                        <tr><td>Effect of larger SE</td><td>More aggressive shrinking</td><td>More aggressive growing</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Use Cases</h3>
+            <ul>
+                <li><strong>Erosion:</strong> Separating lightly-touching objects, removing thin noise lines, extracting boundaries (original minus eroded).</li>
+                <li><strong>Dilation:</strong> Filling small holes, connecting broken object parts, thickening thin structures.</li>
+            </ul>
+        </section>
+
+        <section class="content-box">
+            <h2>3. Compound Morphological Operations</h2>
+            <p>Compound operations combine Erosion and Dilation to achieve results neither can produce alone. There are two key compound operations:</p>
+            <div class="op-grid">
+                <div class="op-card opening">
+                    <h4>&#128194; Opening (A &#8728; B)</h4>
+                    <p><strong>Steps:</strong> Erosion <strong>FIRST</strong>, then Dilation</p>
+                    <div class="formula-box">A &#8728; B = (A &#8854; B) &#8853; B</div>
+                    <p><strong>Effect:</strong> Removes small foreground protrusions and tiny objects, without significantly changing the size of larger objects.</p>
+                    <p><em>Use: Cleaning noise while preserving main shapes.</em></p>
+                </div>
+                <div class="op-card closing">
+                    <h4>&#128193; Closing (A &bull; B)</h4>
+                    <p><strong>Steps:</strong> Dilation <strong>FIRST</strong>, then Erosion</p>
+                    <div class="formula-box">A &bull; B = (A &#8853; B) &#8854; B</div>
+                    <p><strong>Effect:</strong> Fills small holes and gaps within foreground objects without significantly altering overall size.</p>
+                    <p><em>Use: Filling discontinuities in broken outlines.</em></p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>&#9888;&#65039; EXAM TRAP: Order of Operations</h4>
+                <ul>
+                    <li><strong>Opening = Erode FIRST, then Dilate</strong> &#8594; Removes small protrusions.</li>
+                    <li><strong>Closing = Dilate FIRST, then Erode</strong> &#8594; Fills small gaps/holes.</li>
+                </ul>
+                <p><em>Memory tip: "Closing Closes gaps" — Dilation closes the gap before Erosion restores size.</em></p>
+            </div>
+
+            <div class="success-box">
+                <h4>&#9989; Final Exam Application (Spring 2025, Q3a)</h4>
+                <p>A binary robot image has <strong>gaps at joints, claws, and limbs</strong>. Which MIP technique should be used to complete the image without changing its overall shape?</p>
+                <p><strong>Answer: Closing (A &bull; B)</strong> — Dilation fills the gaps first; Erosion then restores the overall size. This is precisely what Closing is designed for.</p>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>4. Complete Summary Table</h2>
+            <table>
+                <thead>
+                    <tr><th>Operation</th><th>Formula</th><th>Primary Effect</th><th>Key Application</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Erosion</strong></td><td>A &#8854; B (FIT)</td><td>Shrinks objects, removes thin protrusions</td><td>Object separation, noise removal</td></tr>
+                    <tr><td><strong>Dilation</strong></td><td>A &#8853; B (HIT)</td><td>Grows objects, fills small holes</td><td>Gap filling, connecting broken parts</td></tr>
+                    <tr><td><strong>Opening</strong></td><td>(A &#8854; B) &#8853; B</td><td>Erode then Dilate — removes protrusions</td><td>Noise removal, object separation</td></tr>
+                    <tr><td><strong>Closing</strong></td><td>(A &#8853; B) &#8854; B</td><td>Dilate then Erode — fills holes</td><td>Gap filling, connecting broken outlines</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <footer><p>CSE 4883 &bull; Digital Image Processing Study Guide</p></footer>
+</body>
+</html>

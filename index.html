@@ -176,6 +176,18 @@
                     </ul>
                 </div>
 
+                <!-- Topic 3.5 -->
+                <div class="card">
+                    <h3><a href="path-connectivity-distance.html">3.5. Path, Connectivity & Distance Measures</a></h3>
+                    <ul>
+                        <li>Digital Paths: Definition, Length, 4-path, 8-path, m-path</li>
+                        <li>Connectivity, Connected Components, Regions & Boundaries</li>
+                        <li>Foreground & Background</li>
+                        <li>Distance Measures: Euclidean (De), City-Block (D4), Chessboard (D8), Dm (m-path)</li>
+                        <li>Distance Contours & Worked Examples</li>
+                    </ul>
+                </div>
+
                 <!-- Topic 4 -->
                 <div class="card">
                     <h3><a href="ann-dip.html">4. Artificial Neural Networks (ANN) in DIP</a></h3>
@@ -195,7 +207,7 @@
         <!-- FINAL SECTION -->
         <section id="final">
             <h2>🎓 Final Syllabus</h2>
-            <p class="placeholder-text">Content for the final exam will be added here as the semester progresses. (Placeholders below)</p>
+            <p>Topics from the final portion of the course — fully documented below.</p>
             
             <div class="module-grid">
                 
@@ -217,10 +229,37 @@
                 </div>
 
                 <div class="card">
-                    <h3><a href="#!">7. Morphological Image Processing</a></h3>
+                    <h3><a href="morphological-image-processing.html">7. Morphological Image Processing</a></h3>
                     <ul>
-                        <li>Dilation and Erosion</li>
-                        <li>Opening and Closing</li>
+                        <li>Structuring Element, FIT, HIT, MISS</li>
+                        <li>Erosion (A ⊖ B): Shrinks objects, FIT condition</li>
+                        <li>Dilation (A ⊕ B): Grows objects, HIT condition</li>
+                        <li>Opening = Erode then Dilate (removes protrusions)</li>
+                        <li>Closing = Dilate then Erode (fills holes/gaps)</li>
+                        <li>Exam: Robot gap-filling → use Closing</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3><a href="image-segmentation.html">8. Image Segmentation</a></h3>
+                    <ul>
+                        <li>Types: Semantic, Instance, Panoptic Segmentation</li>
+                        <li>Traditional: Thresholding, Region-Based (Watershed), Edge Detection (Canny)</li>
+                        <li>Clustering-Based: K-means Segmentation</li>
+                        <li>Deep Learning: Encoder-Decoder Architecture (SegNet)</li>
+                        <li>Applications: Robotics, Medical Imaging, Autonomous Vehicles, Satellites</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3><a href="cnn-image-classification.html">9. CNN for Image Classification & Object Detection</a></h3>
+                    <ul>
+                        <li>Images as Matrices; Kernels & Feature Maps</li>
+                        <li>CNN Architecture: Conv, Stride, Padding, Pooling, Batch Norm</li>
+                        <li>Image Classification Pipeline (Cat vs. Dog)</li>
+                        <li>Object Detection: Bounding Boxes (bx, by, bw, bh, c)</li>
+                        <li>YOLO Algorithm: Grid-based real-time detection</li>
+                        <li>Exam: Classifier vs. Detector; Pest detection with bounding boxes</li>
                     </ul>
                 </div>
 

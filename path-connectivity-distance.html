@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5. Path, Connectivity &amp; Distance Measures - DIP Study Guide</title>
+    <style>
+        :root { --primary-color: #e06d06; --secondary-color: #2c3e50; --background: #f8f9fa; --card-bg: #ffffff; --text-main: #333333; --exam-highlight: #e8f4f8; --exam-border: #17a2b8; --danger-bg: #fff3cd; --danger-border: #ffc107; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--background); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
+        header { background-color: var(--secondary-color); color: white; padding: 1.5rem 0; text-align: center; }
+        h1 { margin: 0; font-size: 2rem; }
+        .container { max-width: 950px; margin: 2rem auto; padding: 0 20px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        h2 { color: var(--secondary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 8px; margin-top: 40px; }
+        h3 { color: var(--primary-color); margin-top: 25px; }
+        .content-box { background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 25px; margin-bottom: 20px; }
+        .exam-focus { background-color: var(--exam-highlight); border-left: 5px solid var(--exam-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .exam-focus h4 { margin-top: 0; color: #0c5460; }
+        .warning-box { background-color: var(--danger-bg); border-left: 5px solid var(--danger-border); padding: 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .warning-box h4 { margin-top: 0; color: #856404; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid #dee2e6; }
+        th, td { padding: 12px; text-align: center; }
+        th { background-color: #f1f3f5; color: var(--secondary-color); }
+        td.left { text-align: left; }
+        code { background-color: #eee; padding: 2px 5px; border-radius: 4px; color: #d63384; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+        .formula-box { text-align: center; background: #f1f3f5; padding: 15px; border-radius: 8px; margin: 15px 0; font-family: 'Courier New', Courier, monospace; border: 1px solid #ced4da; font-weight: bold; font-size: 1.05rem; }
+        .step-list { list-style-type: decimal; margin-left: 20px; }
+        .step-list li { margin-bottom: 10px; padding-left: 10px; }
+        .grid-display { display: inline-block; border: 2px solid var(--secondary-color); padding: 8px; margin: 10px; font-family: monospace; font-size: 1.1rem; background: white; }
+        .grid-display table { margin: 0; border: none; }
+        .grid-display td { border: 1px solid #ccc; width: 35px; height: 35px; text-align: center; padding: 5px; }
+        .pixel-p { background-color: var(--primary-color); color: white; font-weight: bold; }
+        footer { text-align: center; padding: 2rem 0; margin-top: 40px; background-color: var(--secondary-color); color: white; }
+    </style>
+</head>
+<body>
+    <header><h1>Module 5: Path, Connectivity &amp; Distance Measures</h1></header>
+    <div class="container">
+        <a href="index.html" class="back-link">&#8592; Back to Index</a>
+
+        <section class="content-box">
+            <h2>1. Digital Path</h2>
+            <p>A <strong>digital path</strong> (or digital curve) from pixel <strong>p</strong> with coordinates <code>(x, y)</code> to pixel <strong>q</strong> with coordinates <code>(s, t)</code> is a sequence of distinct pixels with coordinates:</p>
+            <div class="formula-box">(x&#8320;, y&#8320;), (x&#8321;, y&#8321;), ..., (x&#8345;, y&#8345;)</div>
+            <p>Where:</p>
+            <ul>
+                <li><code>(x&#8320;, y&#8320;) = (x, y)</code> — the starting pixel <strong>p</strong></li>
+                <li><code>(x&#8345;, y&#8345;) = (s, t)</code> — the ending pixel <strong>q</strong></li>
+                <li>Each consecutive pair <code>(x&#7522;, y&#7522;)</code> and <code>(x&#7522;&#8331;&#8321;, y&#7522;&#8331;&#8321;)</code> must be <strong>adjacent</strong> for 1 &le; i &le; n</li>
+                <li><strong>n</strong> is the <strong>length</strong> of the path</li>
+                <li>If <code>(x&#8320;, y&#8320;) = (x&#8345;, y&#8345;)</code> — the path is <strong>closed</strong></li>
+            </ul>
+
+            <div class="exam-focus">
+                <h4>&#127919; Types of Paths</h4>
+                <ul>
+                    <li><strong>4-path:</strong> Consecutive pixels must be 4-adjacent (only horizontal/vertical moves).</li>
+                    <li><strong>8-path:</strong> Consecutive pixels must be 8-adjacent (horizontal, vertical, or diagonal moves).</li>
+                    <li><strong>m-path:</strong> Uses m-adjacency rules to eliminate ambiguities in diagonal connections.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>2. Connectivity</h2>
+            <p>Let <strong>S</strong> be a subset of pixels in an image.</p>
+            <ul>
+                <li>Two pixels <strong>p</strong> and <strong>q</strong> are <strong>connected in S</strong> if there exists a path between them consisting <em>entirely of pixels in S</em>.</li>
+                <li>For any pixel p in S, the set of all pixels connected to it in S is called a <strong>connected component</strong> of S.</li>
+            </ul>
+
+            <h3>Regions and Boundaries</h3>
+            <ul>
+                <li><strong>Region R:</strong> A subset of pixels in an image where <strong>R is a connected set</strong>.</li>
+                <li><strong>Boundary (Border/Contour):</strong> The set of pixels in region R that have one or more neighbors that are <em>not</em> in R.</li>
+                <li><strong>Special case:</strong> If R is the entire image, its boundary is defined as the pixels in the first and last rows and columns.</li>
+            </ul>
+
+            <h3>Foreground and Background</h3>
+            <p>Suppose an image contains K disjoint regions R&#7522; (none touching the image border):</p>
+            <ul>
+                <li><strong>R&#8377;:</strong> The union of all K regions.</li>
+                <li><strong>Foreground:</strong> R&#8377; (the union of all regions).</li>
+                <li><strong>Background:</strong> (R&#8377;)<sup>c</sup> — the complement of R&#8377;.</li>
+            </ul>
+        </section>
+
+        <section class="content-box">
+            <h2>3. Distance Measures</h2>
+            <p>A <strong>distance function D</strong> between pixels p(x,y), q(s,t), and z(v,w) must satisfy three properties:</p>
+            <ol>
+                <li><strong>D(p, q) &ge; 0</strong>, and D(p, q) = 0 if and only if p = q</li>
+                <li><strong>D(p, q) = D(q, p)</strong> (symmetry)</li>
+                <li><strong>D(p, z) &le; D(p, q) + D(q, z)</strong> (triangle inequality)</li>
+            </ol>
+
+            <h3>Three Distance Metrics</h3>
+            <table>
+                <thead><tr><th>Distance</th><th>Name</th><th>Formula</th><th>Also Called</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>D<sub>e</sub></strong></td>
+                        <td>Euclidean Distance</td>
+                        <td><code>D<sub>e</sub>(p,q) = &radic;[(x-s)&sup2; + (y-t)&sup2;]</code></td>
+                        <td>Straight-line distance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>D<sub>4</sub></strong></td>
+                        <td>City-Block Distance</td>
+                        <td><code>D<sub>4</sub>(p,q) = |x-s| + |y-t|</code></td>
+                        <td>Manhattan distance, Taxicab distance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>D<sub>8</sub></strong></td>
+                        <td>Chessboard Distance</td>
+                        <td><code>D<sub>8</sub>(p,q) = max(|x-s|, |y-t|)</code></td>
+                        <td>Chebyshev distance</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="exam-focus">
+                <h4>&#127919; Worked Example: p=(2,2), q=(1,1)</h4>
+                <ul>
+                    <li><strong>Euclidean:</strong> D<sub>e</sub> = &radic;[(2-1)&sup2; + (2-1)&sup2;] = &radic;2 &#8776; 1.414</li>
+                    <li><strong>City-Block (D<sub>4</sub>):</strong> |2-1| + |2-1| = 1 + 1 = <strong>2</strong></li>
+                    <li><strong>Chessboard (D<sub>8</sub>):</strong> max(|2-1|, |2-1|) = max(1, 1) = <strong>1</strong> (because q is a direct 8-neighbor)</li>
+                </ul>
+            </div>
+
+            <div class="exam-focus">
+                <h4>&#127919; Using D<sub>4</sub> to Prove 4-Neighbors</h4>
+                <p>For a pixel p at (2,2), all pixels with D<sub>4</sub> = 1 are its 4-neighbors:</p>
+                <ul>
+                    <li>Pixel A at (2,1): |2-2| + |1-2| = 0 + 1 = <strong>1</strong> &#10003;</li>
+                    <li>Pixel B at (3,2): |3-2| + |2-2| = 1 + 0 = <strong>1</strong> &#10003;</li>
+                    <li>Pixel C at (2,3): |2-2| + |2-3| = 0 + 1 = <strong>1</strong> &#10003;</li>
+                    <li>Pixel D at (1,2): |1-2| + |2-2| = 1 + 0 = <strong>1</strong> &#10003;</li>
+                </ul>
+                <p>Pixels with D<sub>4</sub> &le; 2 from (x,y) form <strong>diamond-shaped contours</strong> of constant distance.</p>
+                <p>Pixels with D<sub>8</sub> &le; 2 from (x,y) form <strong>square-shaped contours</strong> of constant distance. <em>(Final Exam Q3c: D<sub>8</sub> &le; 2 from (3,2) forms a 5&times;5 square centered at that pixel.)</em></p>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>4. D<sub>m</sub> (Mixed/m-Path Distance)</h2>
+            <p>The <strong>D<sub>m</sub> distance</strong> is defined as the length of the <strong>shortest m-path</strong> between two points. Unlike D<sub>4</sub> and D<sub>8</sub>, D<sub>m</sub> depends on the pixel values along the path and their neighbors (specifically, V = the set of allowed pixel values).</p>
+
+            <h3>Case Analysis for D<sub>m</sub></h3>
+            <p>Consider pixels p, p1, p2, p3, p4 with p, p2, p4 = 1 and p1, p3 = variable. V = {1}.</p>
+
+            <table>
+                <thead><tr><th>Case</th><th>p1 value</th><th>p3 value</th><th>Shortest m-path</th><th>D<sub>m</sub> length</th></tr></thead>
+                <tbody>
+                    <tr><td>Case 1</td><td>0</td><td>0</td><td>p, p2, p4</td><td><strong>2</strong></td></tr>
+                    <tr><td>Case 2</td><td>1</td><td>0</td><td>p, p1, p2, p4</td><td><strong>3</strong></td></tr>
+                    <tr><td>Case 3</td><td>0</td><td>1</td><td>p, p2, p3, p4</td><td><strong>3</strong></td></tr>
+                    <tr><td>Case 4</td><td>1</td><td>1</td><td>p, p1, p2, p3, p4</td><td><strong>4</strong></td></tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <h4>&#9888;&#65039; Why Does D<sub>m</sub> Vary? </h4>
+                <p>The m-path distance changes because m-adjacency eliminates diagonal ambiguity. When a common 4-neighbor of two diagonal pixels is in V, the diagonal connection is broken and the path must go around, increasing the distance.</p>
+            </div>
+        </section>
+
+        <section class="content-box">
+            <h2>5. Distance Contour Summary</h2>
+            <table>
+                <thead><tr><th>Distance Measure</th><th>Contour Shape</th><th>D=1 gives...</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>D<sub>4</sub> (City-Block)</strong></td><td>Diamond / Rotated Square</td><td>4-neighbors of (x,y)</td></tr>
+                    <tr><td><strong>D<sub>8</sub> (Chessboard)</strong></td><td>Square</td><td>8-neighbors of (x,y)</td></tr>
+                    <tr><td><strong>D<sub>e</sub> (Euclidean)</strong></td><td>Circle</td><td>Continuous ring</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <footer><p>CSE 4883 &bull; Digital Image Processing Study Guide</p></footer>
+</body>
+</html>
